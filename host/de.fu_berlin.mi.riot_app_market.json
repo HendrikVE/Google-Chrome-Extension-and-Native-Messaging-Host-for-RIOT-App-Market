@@ -1,0 +1,9 @@
+{
+  "name": "de.fu_berlin.mi.riot_app_market",
+  "description": "RIOT OS App Market",
+  "path": "HOST_PATH",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/"
+  ]
+}
