@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#$1 - name of the board to flash
+
+function flash {
+  cd /home/hendrik/Downloads/RIOT-2017.04/examples/timer_periodic_wakeup_led_test
+  make "BOARD=$1" flash
+}
+
+flash $1
+
+echo 
+echo "Finished script. Press a key to close this terminal..."
+read -n 1 -s
