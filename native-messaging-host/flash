@@ -3,7 +3,7 @@
 #$1 - name of the board to flash
 
 function flash {
-  cd /home/hendrik/Downloads/RIOT-2017.04/examples/timer_periodic_wakeup_led_test
+  cd /home/hendrik/Downloads/RIOT-2017.04/examples/timer_periodic_wakeup
   make "BOARD=$1" flash
 }
 
