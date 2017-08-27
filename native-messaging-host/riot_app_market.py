@@ -8,11 +8,13 @@ def main(cmd):
     output_file_content = base64.b64decode(json_message["output_file"])
     device = json_message["device"]
     application_name = json_message["application_name"]
+    output_file_extension = json_message["output_file_extension"]
     
     try:
-        create_directories("/tmp/riotam/")
+        path = "/tmp/riotam/"
+        create_directories(path)
         
-        with open("/tmp/riotam/" + application_name + ".elf", "wb") as executable:
+        with open(path + application_name + output_file_extension, "wb") as executable:
             executable.write(output_file_content)
             
     except Exception as e:
