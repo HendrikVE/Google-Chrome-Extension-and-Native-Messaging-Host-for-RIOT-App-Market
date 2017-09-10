@@ -1,13 +1,18 @@
 #!/bin/bash
 
-#$1 - name of the board to flash
+# $1 - name of the board to flash
+# $2 - path to the repo to flash with
 
 function flash {
-  cd /home/hendrik/Downloads/RIOT-2017.04/examples/timer_periodic_wakeup
-  make "BOARD=$1" flash
+
+  echo $1
+  echo $2
+
+  cd $2
+  sudo make "BOARD=$1" flash
 }
 
-flash $1
+flash $1 $2
 
 echo 
 echo "Finished script. Press a key to close this terminal..."
