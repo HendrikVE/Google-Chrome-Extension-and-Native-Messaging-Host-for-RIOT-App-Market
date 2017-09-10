@@ -7,9 +7,9 @@ set -e
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 if [ "$(whoami)" = "root" ]; then
-  TARGET_DIR="/etc/opt/chrome/native-messaging-hosts"
+    TARGET_DIR="/etc/opt/chrome/native-messaging-hosts"
 else
-  TARGET_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
+    TARGET_DIR="$HOME/.config/google-chrome/NativeMessagingHosts"
 fi
 
 HOST_NAME=de.fu_berlin.mi.riot_app_market

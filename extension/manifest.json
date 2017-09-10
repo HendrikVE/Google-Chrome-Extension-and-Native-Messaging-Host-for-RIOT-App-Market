@@ -1,30 +1,30 @@
 {
-  // Extension ID: knldjmfmopnpolahpmmgbagdohdnhkik
-  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDcBHwzDvyBQ6bDppkIs9MP4ksKqCMyXQ/A52JivHZKh4YO/9vJsT3oaYhSpDCE9RPocOEQvwsHsFReW2nUEc6OLLyoCFFxIb7KkLGsmfakkut/fFdNJYh0xOTbSN8YvLWcqph09XAY2Y/f0AL7vfO1cuCqtkMt8hFrBGWxDdf9CQIDAQAB",
-  "name": "RIOT OS App Market",
-  "version": "1.0",
-  "manifest_version": 2,
-  "description": "Download your custom RIOT OS, enriched with applications you choose.",
-  /*"app": {
+    // Extension ID: knldjmfmopnpolahpmmgbagdohdnhkik
+    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDcBHwzDvyBQ6bDppkIs9MP4ksKqCMyXQ/A52JivHZKh4YO/9vJsT3oaYhSpDCE9RPocOEQvwsHsFReW2nUEc6OLLyoCFFxIb7KkLGsmfakkut/fFdNJYh0xOTbSN8YvLWcqph09XAY2Y/f0AL7vfO1cuCqtkMt8hFrBGWxDdf9CQIDAQAB",
+    "name": "RIOT OS App Market",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "Download your custom RIOT OS, enriched with applications you choose.",
+    /*"app": {
     "launch": {
-      "local_path": "main.html"
+        "local_path": "main.html"
     }
-  },*/
+    },*/
   
-  "icons": {
-    "128": "icon-128.png"
-  },
-  
-  "externally_connectable": {
-    "matches": ["*://localhost/*"]
-  },
-  
-  "background": {
-    "scripts": ["eventPage.js"],
-    "persistent": false
-  },
-  
-  "permissions": [
-    "nativeMessaging"
-  ]
+    "icons": {
+        "128": "icon-128.png"
+    },
+
+    "externally_connectable": {
+        "matches": ["*://localhost/*"]
+    },
+
+    "background": {
+        "scripts": ["eventPage.js"],
+        "persistent": false
+    },
+
+    "permissions": [
+        "nativeMessaging"
+    ]
 }
