@@ -1,8 +1,8 @@
 #!/usr/bin/python
-import os, errno, time, subprocess, sys, json, struct, shutil
+import os, errno, time, subprocess, sys, json, struct
 import json, base64
-import tempfile
-import zipfile
+from shutil import rmtree
+import tarfile
 
 def main(cmd):
     
@@ -18,36 +18,29 @@ def main(cmd):
     application_name = json_message["application_name"]
     
     try:
-        path = tempfile.gettempdir() + "/riotam/"
-        create_directories(path)
+        path = "tmp/"
         
-        with open(path + application_name + "." + output_file_extension, "wb") as executable:
-            executable.write(output_file_content)
+        archieve_file_path = path + application_name + "." + output_archive_extension
+        
+        with open(archieve_file_path, "wb") as archive:
+            archive.write(output_archive_content)
             
-        # handle archive
-        zip_path = path + "testarchive/"
-        create_directories(zip_path)
+        dest_path = path + application_name + "/"
+        create_directories(dest_path)
         
-        zip_file_path = zip_path + "test" + "." + output_archive_extension
-        
-        """with open(zip_file_path, "wb") as archive:
-            archive.write(output_archive_content)"""
+        tar = tarfile.open(archieve_file_path, "r:gz")
+        for tarinfo in tar:
+            tar.extract(tarinfo, dest_path)
             
-        #shutil.unpack_archive(zip_path)
-        """zip_ref = zipfile.ZipFile(zip_file_path, 'r')
-        zip_ref.extractall(zip_path + "tester/")
-        zip_ref.close()"""
+        tar.close()
         
-        #os.chdir(path + "testarchive/generated_by_riotam/test")
-        #proc = subprocess.Popen(["make", "build.py",  arguments], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        path_to_makefile = dest_path + "generated_by_riotam/" + application_name + "/"
+        proc = subprocess.Popen(["gnome-terminal -e './flash " + device + " " + path_to_makefile + "'"], shell=True)
         
-        proc = subprocess.Popen(["gnome-terminal -e './flash " + device + " " + path + "testarchive/tester/generated_by_riotam/test" + "'"], shell=True)
+        # rmtree(path)
         
     except Exception as e:
         print e
-    
-    #proc = subprocess.Popen(["gnome-terminal -e './flash " + device + " " + path + "testarchive/" + "'"], shell=True)
-    #build_result["cmd_output"] += proc.communicate()[0].replace("\n", "<br>")
     
 def create_directories(path):
     
@@ -76,5 +69,5 @@ def get_message():
     return text
     
 if __name__ == "__main__":
-    
+	
     main(sys.argv[0])
