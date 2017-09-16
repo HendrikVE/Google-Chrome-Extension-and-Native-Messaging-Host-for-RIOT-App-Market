@@ -1,8 +1,11 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 import os, errno, time, subprocess, sys, json, struct
 import json, base64
 from shutil import rmtree
 import tarfile
+
 
 def main(cmd):
     
@@ -13,8 +16,8 @@ def main(cmd):
     
     output_archive_content = base64.b64decode(json_message["output_archive"])
     output_archive_extension = json_message["output_archive_extension"]
-    
-    device = json_message["device"]
+
+    board = json_message["board"]
     application_name = json_message["application_name"]
     
     try:
@@ -35,13 +38,14 @@ def main(cmd):
         tar.close()
         
         path_to_makefile = dest_path + "generated_by_riotam/" + application_name + "/"
-        proc = subprocess.Popen(["gnome-terminal -e './flash " + device + " " + path_to_makefile + "'"], shell=True)
+        subprocess.Popen(["gnome-terminal -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
         
         # rmtree(path)
         
     except Exception as e:
         print e
-    
+
+
 def create_directories(path):
     
     try:
@@ -51,7 +55,8 @@ def create_directories(path):
 
         if e.errno != errno.EEXIST:
             raise
-    
+
+
 # https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/nativeMessaging/host/native-messaging-example-host
 def get_message():
     
@@ -67,7 +72,8 @@ def get_message():
     text = sys.stdin.read(text_length).decode('utf-8')
     
     return text
-    
+
+
 if __name__ == "__main__":
-	
+
     main(sys.argv[0])
