@@ -37,7 +37,7 @@ def main(cmd):
             
         tar.close()
         
-        path_to_makefile = dest_path + "generated_by_riotam/" + application_name + "/"
+        path_to_makefile = os.path.join(dest_path, "generated_by_riotam", application_name)
         subprocess.Popen(["gnome-terminal -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
         
         # rmtree(path)

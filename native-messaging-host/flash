@@ -8,11 +8,10 @@ function flash {
     echo $1
     echo $2
 
-    cd $2
-    sudo make "BOARD=$1" flash
+    sudo make -C "$2" "BOARD=$1" flash
 }
 
-flash $1 $2
+flash "$1" "$2"
 
 echo 
 echo "Finished script. Press a key to close this terminal..."
