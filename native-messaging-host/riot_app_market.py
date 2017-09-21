@@ -9,7 +9,7 @@ import json
 import logging
 import os
 import struct
-from subprocess import Popen
+from subprocess import Popen, call
 import sys
 import tarfile
 from shutil import rmtree
@@ -29,30 +29,31 @@ def main():
     application_name = json_message["application_name"]
     
     try:
-        temporary_directory = "tmp/"
+        temporary_directory = "tmp/" + application_name + "/"
+        create_directories(temporary_directory)
         
-        archieve_file_path = temporary_directory + application_name + "/" + application_name + "." + output_archive_extension
+        archive_file_path = temporary_directory + application_name + "." + output_archive_extension
         
-        with open(archieve_file_path, "wb") as archive:
+        with open(archive_file_path, "wb") as archive:
             archive.write(output_archive_content)
             
         dest_path = temporary_directory + application_name + "/"
         create_directories(dest_path)
         
-        tar = tarfile.open(archieve_file_path, "r:gz")
+        tar = tarfile.open(archive_file_path, "r:gz")
         for tarinfo in tar:
             tar.extract(tarinfo, dest_path)
             
         tar.close()
         
         path_to_makefile = os.path.join(dest_path, "generated_by_riotam", application_name)
-        proc = Popen(["gnome-terminal -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
-        output = proc.communicate()[0]
+        process = Popen(["x-terminal-emulator -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
+        #process.communicate()
 
-        rmtree(temporary_directory + application_name + "/")
+        #rmtree(temporary_directory)
         
     except Exception as e:
-        print (e)
+        logging.error(str(e), exc_info=True)
 
 
 def create_directories(path):
