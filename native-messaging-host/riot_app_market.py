@@ -1,13 +1,21 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-import os, errno, time, subprocess, sys, json, struct
-import json, base64
-from shutil import rmtree
+from __future__ import print_function
+
+import base64
+import errno
+import json
+import logging
+import os
+import struct
+from subprocess import Popen
+import sys
 import tarfile
+from shutil import rmtree
 
 
-def main(cmd):
+def main():
     
     json_message = json.loads(get_message())
     
@@ -21,14 +29,14 @@ def main(cmd):
     application_name = json_message["application_name"]
     
     try:
-        path = "tmp/"
+        temporary_directory = "tmp/"
         
-        archieve_file_path = path + application_name + "." + output_archive_extension
+        archieve_file_path = temporary_directory + application_name + "/" + application_name + "." + output_archive_extension
         
         with open(archieve_file_path, "wb") as archive:
             archive.write(output_archive_content)
             
-        dest_path = path + application_name + "/"
+        dest_path = temporary_directory + application_name + "/"
         create_directories(dest_path)
         
         tar = tarfile.open(archieve_file_path, "r:gz")
@@ -38,12 +46,13 @@ def main(cmd):
         tar.close()
         
         path_to_makefile = os.path.join(dest_path, "generated_by_riotam", application_name)
-        subprocess.Popen(["gnome-terminal -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
-        
-        # rmtree(path)
+        proc = Popen(["gnome-terminal -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
+        output = proc.communicate()[0]
+
+        rmtree(temporary_directory + application_name + "/")
         
     except Exception as e:
-        print e
+        print (e)
 
 
 def create_directories(path):
@@ -76,4 +85,10 @@ def get_message():
 
 if __name__ == "__main__":
 
-    main(sys.argv[0])
+    logging.basicConfig(filename="log/riot_app_market_log.txt", format="%(asctime)s [%(levelname)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S", level=logging.DEBUG)
+
+    try:
+        main()
+
+    except Exception as e:
+        logging.error(str(e), exc_info=True)
