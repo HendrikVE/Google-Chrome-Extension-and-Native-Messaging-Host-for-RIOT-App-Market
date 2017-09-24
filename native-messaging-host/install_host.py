@@ -37,21 +37,21 @@ def main(argv):
 
     host_name = "de.fu_berlin.mi.riot_app_market"
 
-    # Create directory to store native messaging host
+    # create directory to store native messaging host
     create_directories(target_dir)
 
-    # Copy native messaging host manifest
-    json_manifest = "%s.json" % host_name
-    copyfile(json_manifest, os.path.join(target_dir, json_manifest))
+    # copy native messaging host manifest
+    json_manifest_name = "%s.json" % host_name
+    copyfile(json_manifest_name, os.path.join(target_dir, json_manifest_name))
 
-    # Update host path in the manifest
+    # replace host path placeholder in the manifest
     host_path = "%s/riot_app_market.py" % current_dir
-    replace_host_path(os.path.join(target_dir, json_manifest), host_path)
+    replace_host_path(os.path.join(target_dir, json_manifest_name), host_path)
 
     # Set permissions for the manifest so that all users can read it
-    file = "{0}/{1}.json".format(target_dir, host_name)
-    st = os.stat(file)
-    os.chmod(file, st.st_mode | stat.S_IROTH)
+    json_manifest = "{0}/{1}".format(target_dir, json_manifest_name)
+    st = os.stat(json_manifest)
+    os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
     print ("Native messaging host {0} has been installed for {1}".format(host_name, args.browser))
 
