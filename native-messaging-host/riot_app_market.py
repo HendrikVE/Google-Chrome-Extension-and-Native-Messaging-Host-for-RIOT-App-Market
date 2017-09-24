@@ -9,10 +9,9 @@ import json
 import logging
 import os
 import struct
-from subprocess import Popen, call
 import sys
 import tarfile
-from shutil import rmtree
+from subprocess import Popen
 
 
 def main():
@@ -45,10 +44,9 @@ def main():
             tar.extract(tarinfo, dest_path)
             
         tar.close()
-        
+
         path_to_makefile = os.path.join(dest_path, "generated_by_riotam", application_name)
-        process = Popen(["x-terminal-emulator -e './flash " + board + " " + path_to_makefile + "'"], shell=True)
-        #process.communicate()
+        Popen(["x-terminal-emulator", "-e", "./flash {0} {1}".format(board, path_to_makefile)])
 
         #rmtree(temporary_directory)
         
