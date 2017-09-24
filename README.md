@@ -4,7 +4,7 @@
 1. **sudo apt-get install git**
 2. **sudo apt-get install python**
 3. navigate with a terminal in to the directory where you want the extension to be stored at, then run:
-   **git clone https://github.com/HendrikVE/riotam-chrome-integration**
+   <br>**git clone https://github.com/HendrikVE/riotam-chrome-integration**
 
 ## Install Chrome extension
 1. Open Chrome or Chromium
