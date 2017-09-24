@@ -3,6 +3,10 @@
 import subprocess
 
 
+class BrowserNotSupportedException(Exception):
+    pass
+
+
 def get_target_dir(home_dir, browser):
 
     target_dir = None
@@ -36,6 +40,9 @@ def get_target_dir(home_dir, browser):
 
             elif is_chromium(browser):
                 target_dir = "%s/.config/chromium/NativeMessagingHosts" % home_dir
+
+    if target_dir is None:
+        raise BrowserNotSupportedException("%s is not supported" % browser)
 
     return target_dir
 

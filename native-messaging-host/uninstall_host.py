@@ -10,7 +10,7 @@ import sys
 
 import os
 
-from common import get_target_dir
+from common import get_target_dir, BrowserNotSupportedException
 
 
 def main(argv):
@@ -25,11 +25,23 @@ def main(argv):
         return
 
     home_dir = expanduser("~")
-    target_dir = get_target_dir(home_dir, args.browser)
+
+    try:
+        target_dir = get_target_dir(home_dir, args.browser)
+
+    except BrowserNotSupportedException as e:
+        print (str(e))
+        return
 
     host_name = "de.fu_berlin.mi.riot_app_market"
-    os.remove("{0}/{1}.json".format(target_dir, host_name))
-    print ("Native messaging host %s has been uninstalled." % host_name)
+
+    try:
+        os.remove("{0}/{1}.json".format(target_dir, host_name))
+
+    except OSError:
+        pass
+
+    print("Native messaging host {0} has been uninstalled from {1}".format(host_name, args.browser))
 
 
 def init_argparse():

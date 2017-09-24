@@ -11,7 +11,7 @@ import sys
 from os.path import expanduser
 from shutil import copyfile
 
-from common import get_target_dir
+from common import get_target_dir, BrowserNotSupportedException
 
 
 def main(argv):
@@ -27,10 +27,12 @@ def main(argv):
 
     current_dir = os.getcwd()
     home_dir = expanduser("~")
-    target_dir = get_target_dir(home_dir, args.browser)
 
-    if target_dir is None:
-        print("unknown browser!")
+    try:
+        target_dir = get_target_dir(home_dir, args.browser)
+
+    except BrowserNotSupportedException as e:
+        print(str(e))
         return
 
     host_name = "de.fu_berlin.mi.riot_app_market"
@@ -51,7 +53,7 @@ def main(argv):
     st = os.stat(file)
     os.chmod(file, st.st_mode | stat.S_IROTH)
 
-    print ("Native messaging host %s has been installed." % host_name)
+    print ("Native messaging host {0} has been installed for {1}".format(host_name, args.browser))
 
 
 def init_argparse():
