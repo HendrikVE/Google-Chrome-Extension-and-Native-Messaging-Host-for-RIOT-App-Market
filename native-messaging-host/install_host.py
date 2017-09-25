@@ -11,7 +11,7 @@ import sys
 from os.path import expanduser
 from shutil import copyfile
 
-from common import get_target_dir, BrowserNotSupportedException
+from common import get_target_dir, BrowserNotSupportedException, HOST_NAME
 
 
 def main(argv):
@@ -35,25 +35,23 @@ def main(argv):
         print(str(e))
         return
 
-    host_name = "de.fu_berlin.mi.riot_app_market"
-
     # create directory to store native messaging host
     create_directories(target_dir)
 
     # copy native messaging host manifest
-    json_manifest_name = "%s.json" % host_name
+    json_manifest_name = "%s.json" % HOST_NAME
     copyfile(json_manifest_name, os.path.join(target_dir, json_manifest_name))
 
-    # replace host path placeholder in the manifest
+    # replace HOST_PATH placeholder in the manifest
     host_path = "%s/riot_app_market.py" % current_dir
     replace_host_path(os.path.join(target_dir, json_manifest_name), host_path)
 
-    # Set permissions for the manifest so that all users can read it
+    # set permissions for the manifest so that all users can read it
     json_manifest = "{0}/{1}".format(target_dir, json_manifest_name)
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print ("Native messaging host {0} has been installed for {1}".format(host_name, args.browser))
+    print ("Native messaging host {0} has been installed for {1}".format(HOST_NAME, args.browser))
 
 
 def init_argparse():

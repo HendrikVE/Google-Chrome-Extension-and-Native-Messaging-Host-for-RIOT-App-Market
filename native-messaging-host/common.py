@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 import subprocess
 
+HOST_NAME = "de.fu_berlin.mi.riot_app_market"
+
 
 class BrowserNotSupportedException(Exception):
     pass

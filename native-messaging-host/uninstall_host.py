@@ -10,7 +10,7 @@ import sys
 
 import os
 
-from common import get_target_dir, BrowserNotSupportedException
+from common import get_target_dir, BrowserNotSupportedException, HOST_NAME
 
 
 def main(argv):
@@ -33,15 +33,14 @@ def main(argv):
         print (str(e))
         return
 
-    host_name = "de.fu_berlin.mi.riot_app_market"
-
     try:
-        os.remove("{0}/{1}.json".format(target_dir, host_name))
+        os.remove("{0}/{1}.json".format(target_dir, HOST_NAME))
 
     except OSError:
+        # we are not interested in missing files when removing anyway
         pass
 
-    print("Native messaging host {0} has been uninstalled from {1}".format(host_name, args.browser))
+    print("Native messaging host {0} has been uninstalled from {1}".format(HOST_NAME, args.browser))
 
 
 def init_argparse():
