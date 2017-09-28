@@ -4,14 +4,13 @@
 from __future__ import print_function
 
 import argparse
-import errno
 import os
 import stat
 import sys
 from os.path import expanduser
 from shutil import copyfile
 
-from common import get_target_dir, BrowserNotSupportedException, HOST_NAME
+import common
 
 
 def main(argv):
@@ -29,17 +28,17 @@ def main(argv):
     home_dir = expanduser("~")
 
     try:
-        target_dir = get_target_dir(home_dir, args.browser)
+        target_dir = common.get_target_dir(home_dir, args.browser)
 
-    except BrowserNotSupportedException as e:
+    except common.BrowserNotSupportedException as e:
         print(str(e))
         return
 
     # create directory to store native messaging host
-    create_directories(target_dir)
+    common.create_directories(target_dir)
 
     # copy native messaging host manifest
-    json_manifest_name = "%s.json" % HOST_NAME
+    json_manifest_name = "%s.json" % common.HOST_NAME
     copyfile(json_manifest_name, os.path.join(target_dir, json_manifest_name))
 
     # replace HOST_PATH placeholder in the manifest
@@ -51,7 +50,7 @@ def main(argv):
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print ("Native messaging host {0} has been installed for {1}".format(HOST_NAME, args.browser))
+    print ("Native messaging host {0} has been installed for {1}".format(common.HOST_NAME, args.browser))
 
 
 def init_argparse():
@@ -64,16 +63,6 @@ def init_argparse():
                         help="the browser to install the host for. (chrome or chromium)")
 
     return parser
-
-
-def create_directories(path):
-    try:
-        os.makedirs(path)
-
-    except OSError as e:
-
-        if e.errno != errno.EEXIST:
-            raise
 
 
 def replace_host_path(path, host_path):

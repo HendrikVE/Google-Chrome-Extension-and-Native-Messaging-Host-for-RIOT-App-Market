@@ -4,7 +4,6 @@
 from __future__ import print_function
 
 import base64
-import errno
 import json
 import logging
 import os
@@ -13,16 +12,18 @@ import sys
 import tarfile
 from subprocess import Popen
 
+import common
+
 
 def main():
 
-    json_message = json.loads(get_message())
+    json_message = json.loads(get_message_from_stdin())
 
     try:
         # just testing connectivity
         if json_message["native_messaging_host_accessible"]:
             return
-    except:
+    except Exception as e:
         pass
 
     output_file_content = base64.b64decode(json_message["output_file"])
@@ -36,7 +37,7 @@ def main():
 
     try:
         temporary_directory = "tmp/" + application_name + "/"
-        create_directories(temporary_directory)
+        common.create_directories(temporary_directory)
 
         archive_file_path = temporary_directory + application_name + "." + output_archive_extension
 
@@ -44,7 +45,7 @@ def main():
             archive.write(output_archive_content)
 
         dest_path = temporary_directory + application_name + "/"
-        create_directories(dest_path)
+        common.create_directories(dest_path)
 
         tar = tarfile.open(archive_file_path, "r:gz")
         for tarinfo in tar:
@@ -61,19 +62,16 @@ def main():
         logging.error(str(e), exc_info=True)
 
 
-def create_directories(path):
-
-    try:
-        os.makedirs(path)
-
-    except OSError as e:
-
-        if e.errno != errno.EEXIST:
-            raise
-
-
 # https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/nativeMessaging/host/native-messaging-example-host
-def get_message():
+def get_message_from_stdin():
+    """
+    Read message from stdin sent by chrome extension
+
+    Returns
+    -------
+    string
+        Input text in form of a JSON string
+    """
 
     # Read the message length (first 4 bytes).
     text_length_bytes = sys.stdin.read(4)

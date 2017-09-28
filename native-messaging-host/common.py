@@ -2,6 +2,10 @@
 # -*- coding: UTF-8 -*-
 import subprocess
 
+import os
+
+import errno
+
 HOST_NAME = "de.fu_berlin.mi.riot_app_market"
 
 
@@ -67,3 +71,27 @@ def is_chrome(browser):
 
 def is_chromium(browser):
     return browser == "chromium"
+
+
+def create_directories(path):
+    """
+    Creates all directories on path
+
+    Parameters
+    ----------
+    path: string
+        Path to create
+
+    Raises
+    -------
+    OSError
+        Something fails creating directories, except errno is EEXIST
+
+    """
+    try:
+        os.makedirs(path)
+
+    except OSError as e:
+
+        if e.errno != errno.EEXIST:
+            raise
