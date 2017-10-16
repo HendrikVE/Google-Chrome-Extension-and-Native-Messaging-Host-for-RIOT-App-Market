@@ -36,15 +36,15 @@ def main():
     application_name = json_message["application_name"]
 
     try:
-        temporary_directory = "tmp/" + application_name + "/"
+        temporary_directory = os.path.join("tmp", application_name)
         common.create_directories(temporary_directory)
 
-        archive_file_path = temporary_directory + application_name + "." + output_archive_extension
+        archive_file_path = os.path.join(temporary_directory, application_name + "." + output_archive_extension)
 
         with open(archive_file_path, "wb") as archive:
             archive.write(output_archive_content)
 
-        dest_path = temporary_directory + application_name + "/"
+        dest_path = os.path.join(temporary_directory, application_name)
         common.create_directories(dest_path)
 
         tar = tarfile.open(archive_file_path, "r:gz")
@@ -82,7 +82,7 @@ def get_message_from_stdin():
     text_length = struct.unpack('i', text_length_bytes)[0]
 
     # Read the text (JSON object) of the message.
-    text = sys.stdin.read(text_length).decode('utf-8')
+    text = sys.stdin.read(text_length).decode("utf-8")
 
     return text
 
