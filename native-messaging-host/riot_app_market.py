@@ -23,6 +23,7 @@ def main():
         # just testing connectivity
         if json_message["native_messaging_host_accessible"]:
             return
+
     except Exception as e:
         pass
 
@@ -79,7 +80,7 @@ def get_message_from_stdin():
         sys.exit(0)
 
     # Unpack message length as 4 byte integer.
-    text_length = struct.unpack('i', text_length_bytes)[0]
+    text_length = struct.unpack("i", text_length_bytes)[0]
 
     # Read the text (JSON object) of the message.
     text = sys.stdin.read(text_length).decode("utf-8")

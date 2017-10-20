@@ -12,6 +12,8 @@ from shutil import copyfile
 
 import common
 
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+
 
 def main(argv):
 
@@ -24,7 +26,6 @@ def main(argv):
         print (str(e))
         return
 
-    current_dir = os.getcwd()
     home_dir = expanduser("~")
 
     try:
@@ -39,10 +40,10 @@ def main(argv):
 
     # copy native messaging host manifest
     json_manifest_name = "%s.json" % common.HOST_NAME
-    copyfile(json_manifest_name, os.path.join(target_dir, json_manifest_name))
+    copyfile(os.path.join(CUR_DIR, json_manifest_name), os.path.join(target_dir, json_manifest_name))
 
     # replace HOST_PATH placeholder in the manifest
-    host_path = "%s/riot_app_market.py" % current_dir
+    host_path = "%s/riot_app_market.py" % CUR_DIR
     replace_host_path(os.path.join(target_dir, json_manifest_name), host_path)
 
     # set permissions for the manifest so that all users can read it
