@@ -4,11 +4,9 @@
 from __future__ import print_function
 
 import argparse
-from os.path import expanduser
-
-import sys
-
 import os
+import sys
+from os.path import expanduser
 
 from common import get_target_dir, BrowserNotSupportedException, HOST_NAME
 

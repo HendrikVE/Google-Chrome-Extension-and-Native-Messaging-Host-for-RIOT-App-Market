@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import subprocess
 
-import os
+from __future__ import print_function
 
 import errno
+import os
+import subprocess
 
 HOST_NAME = "de.fu_berlin.mi.riot_app_market"
 

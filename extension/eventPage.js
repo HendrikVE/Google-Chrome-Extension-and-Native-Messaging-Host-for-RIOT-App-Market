@@ -33,8 +33,8 @@ chrome.runtime.onMessageExternal.addListener(
             }
         }
         else {
-            //if output_file is null, something did not work when building the application
-            if (request.output_file != null) {
+            //if output_archive is null, something did not work when building the application
+            if (request.output_archive != null) {
                 chrome.runtime.sendNativeMessage(hostName, request,
                     function() {
                         if (chrome.runtime.lastError) {

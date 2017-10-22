@@ -27,9 +27,6 @@ def main():
     except Exception as e:
         pass
 
-    output_file_content = base64.b64decode(json_message["output_file"])
-    output_file_extension = json_message["output_file_extension"]
-
     output_archive_content = base64.b64decode(json_message["output_archive"])
     output_archive_extension = json_message["output_archive_extension"]
 
