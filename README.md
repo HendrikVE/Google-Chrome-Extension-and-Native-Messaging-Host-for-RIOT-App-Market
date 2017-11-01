@@ -15,9 +15,13 @@
 6. click on **open**
 
 ## Install Native Messaging Host
+**Please notice: the path to the Native Messaging Host must not contain spaces**
 1. open a terminal
 2. type **cd <to_replace>/riotam-chrome-integration/native-messaging-host**
 3. run **python install_host.py --browser your_browser** (your_browser has to be replaced by **chrome** or **chromium**)
+
+### More Information
+Graphics are editable with [yEd](http://www.yworks.com/products/yed "http://www.yworks.com/products/yed")
 
 ## LICENSE
 * The project is licensed under the GNU Lesser General Public License

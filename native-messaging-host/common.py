@@ -23,6 +23,22 @@ class BrowserNotSupportedException(Exception):
 
 
 def get_target_dir(home_dir, browser):
+    """
+    Get the target dir for installing native messaging host
+
+    Parameters
+    ----------
+    home_dir: string
+        Home directory of the user
+    browser: string
+        The browser to install the host
+
+    Returns
+    -------
+    string
+        target directory
+
+    """
 
     target_dir = None
     if is_mac_os():

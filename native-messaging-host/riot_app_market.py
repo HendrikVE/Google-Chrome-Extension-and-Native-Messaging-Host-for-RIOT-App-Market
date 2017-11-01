@@ -60,6 +60,8 @@ def main():
         tar.close()
 
         path_to_makefile = os.path.join(dest_path, "generated_by_riotam", application_name)
+
+        #open standard terminal and execute shell script "flash"
         Popen(["x-terminal-emulator", "-e", "./flash {0} {1}".format(board, path_to_makefile)])
 
         #rmtree(temporary_directory)
