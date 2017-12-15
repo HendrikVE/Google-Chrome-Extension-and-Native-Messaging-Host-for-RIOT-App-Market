@@ -3,7 +3,6 @@
     "description": "RIOT OS App Market",
     "path": "HOST_PATH",
     "type": "stdio",
-    "allowed_origins": [
-        "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/"
-    ]
+    "allowed_origins": [ "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/" ],
+    "allowed_extensions": [ "rapstore.extension@fu-berlin.de" ]
 }

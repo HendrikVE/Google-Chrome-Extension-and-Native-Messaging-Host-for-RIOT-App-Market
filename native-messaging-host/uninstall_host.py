@@ -30,7 +30,7 @@ def main(argv):
         print (str(e))
         return
 
-    home_dir = expanduser("~")
+    home_dir = expanduser('~')
 
     try:
         target_dir = get_target_dir(home_dir, args.browser)
@@ -40,27 +40,27 @@ def main(argv):
         return
 
     try:
-        os.remove("{0}/{1}.json".format(target_dir, HOST_NAME))
+        os.remove('{0}/{1}.json'.format(target_dir, HOST_NAME))
 
     except OSError:
         # we are not interested in missing files when removing anyway
         pass
 
-    print("Native messaging host {0} has been uninstalled from {1}".format(HOST_NAME, args.browser))
+    print('Native messaging host {0} has been uninstalled from {1}'.format(HOST_NAME, args.browser))
 
 
 def init_argparse():
 
-    parser = argparse.ArgumentParser(description="Build RIOT OS")
+    parser = argparse.ArgumentParser(description='Build RIOT OS')
 
-    parser.add_argument("--browser",
-                        dest="browser", action="store",
+    parser.add_argument('--browser',
+                        dest='browser', action='store',
                         required=True,
-                        help="the browser to install the host for. (chrome or chromium)")
+                        help='the browser to install the host for. (chrome or chromium)')
 
     return parser
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     main(sys.argv[1:])
