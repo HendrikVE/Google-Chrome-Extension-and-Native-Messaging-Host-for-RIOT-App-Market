@@ -16,7 +16,7 @@
     },
 
     "background": {
-        "scripts": ["eventPage.js"],
+        "scripts": ["background_script.js"],
         "persistent": false
     },
     "content_scripts": [{

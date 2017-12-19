@@ -6,8 +6,6 @@
  * directory for more details.
 */
 
-var hostName = "de.fu_berlin.mi.riot_app_market";
-
 chrome.runtime.onMessage.addListener(notify);
 
 function notify(message) {
