@@ -19,6 +19,7 @@ from os.path import expanduser
 from shutil import copyfile
 
 import common
+from common import Browser
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -37,7 +38,19 @@ def main(argv):
     home_dir = expanduser('~')
 
     try:
-        target_dir = common.get_target_dir(home_dir, args.browser)
+        if args.browser == 'chrome':
+            browser = Browser.CHROME
+
+        elif args.browser == 'chromium':
+            browser = Browser.CHROMIUM
+
+        elif args.browser == 'firefox':
+            browser = Browser.FIREFOX
+
+        else:
+            raise common.BrowserNotSupportedException(args.browser)
+
+        target_dir = common.get_target_dir(home_dir, browser)
 
     except common.BrowserNotSupportedException as e:
         print(str(e))
@@ -50,16 +63,21 @@ def main(argv):
     json_manifest_name = '%s.json' % common.HOST_NAME
     copyfile(os.path.join(CUR_DIR, json_manifest_name), os.path.join(target_dir, json_manifest_name))
 
+    target_file = os.path.join(target_dir, json_manifest_name)
+
     # replace HOST_PATH placeholder in the manifest
     host_path = '%s/riot_app_market.py' % CUR_DIR
-    replace_host_path(os.path.join(target_dir, json_manifest_name), host_path)
+    replace_host_path(target_file, host_path)
+
+    # replace ALLOWED_ATTRIBUTE placeholder in the manifest
+    firefox_chrome_compatibility_switch(target_file, browser)
 
     # set permissions for the manifest so that all users can read it
     json_manifest = '{0}/{1}'.format(target_dir, json_manifest_name)
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print ('Native messaging host {0} has been installed for {1}'.format(common.HOST_NAME, args.browser))
+    print ('Native messaging host {0} has been installed for {1}'.format(common.HOST_NAME, browser))
 
 
 def init_argparse():
@@ -84,6 +102,23 @@ def replace_host_path(path, host_path):
             for line in old_file.readlines():
                 if 'HOST_PATH' in line:
                     line = line.replace('HOST_PATH', host_path)
+
+                file.write(line)
+
+    os.remove(path + '.old')
+
+
+def firefox_chrome_compatibility_switch(path, browser):
+
+    copyfile(path, path + '.old')
+
+    with open(path + '.old', 'r') as old_file:
+        with open(path, 'w') as file:
+
+            for line in old_file.readlines():
+                if 'ALLOWED_ATTRIBUTE' in line:
+                    allowed_attribute = common.get_allowed_attribute(browser)
+                    line = line.replace('ALLOWED_ATTRIBUTE', allowed_attribute)
 
                 file.write(line)
 
