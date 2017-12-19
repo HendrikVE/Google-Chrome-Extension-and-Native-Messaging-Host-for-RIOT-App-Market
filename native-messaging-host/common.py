@@ -16,13 +16,14 @@ import os
 import subprocess
 
 HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
+FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'
+CHROME_EXTENSION_ID = 'knldjmfmopnpolahpmmgbagdohdnhkik'
 
 
 class Browser(object):
-
-    FIREFOX = 'firefox'
     CHROME = 'chrome'
     CHROMIUM = 'chromium'
+    FIREFOX = 'firefox'
 
 
 class BrowserNotSupportedException(Exception):
@@ -93,10 +94,10 @@ def get_target_dir(home_dir, browser):
 def get_allowed_attribute(browser):
 
     if browser == Browser.CHROME or browser == Browser.CHROMIUM:
-        return '"allowed_origins": [ "chrome-extension://knldjmfmopnpolahpmmgbagdohdnhkik/" ]'
+        return '"allowed_origins": [ "chrome-extension://%s/" ]' % CHROME_EXTENSION_ID
 
     elif browser == Browser.FIREFOX:
-        return '"allowed_extensions": [ "rapstore.extension@fu-berlin.de" ]'
+        return '"allowed_extensions": [ "%s" ]' % FIREFOX_EXTENSION_ID
 
     else:
         raise BrowserNotSupportedException(browser)

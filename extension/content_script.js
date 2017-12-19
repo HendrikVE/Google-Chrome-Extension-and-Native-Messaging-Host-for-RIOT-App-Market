@@ -12,6 +12,6 @@ window.addEventListener("message", function(event) {
         event.data.direction == "rapstore") {
 
         // notify background script
-        browser.runtime.sendMessage(event.data.message);
+        chrome.runtime.sendMessage(event.data.message);
     }
 });
