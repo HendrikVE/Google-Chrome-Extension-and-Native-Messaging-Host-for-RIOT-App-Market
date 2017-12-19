@@ -15,14 +15,6 @@
         "128": "icon-128.png"
     },
 
-    "externally_connectable": {
-        "matches": [
-            "*://localhost/*",
-            "*://141.22.28.91/*",
-            "*://rapstore.cladmi.eu/*"
-        ]
-    },
-
     "background": {
         "scripts": ["eventPage.js"],
         "persistent": false
