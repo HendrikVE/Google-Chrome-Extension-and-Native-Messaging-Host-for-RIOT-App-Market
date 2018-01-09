@@ -9,7 +9,7 @@
  * directory for more details.
 """
 
-from __future__ import print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import base64
 import json
@@ -30,14 +30,6 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 def main():
 
     json_message = json.loads(get_message_from_stdin())
-
-    try:
-        # just testing connectivity
-        if json_message['native_messaging_host_accessible']:
-            return
-
-    except Exception as e:
-        pass
 
     output_archive_content = base64.b64decode(json_message['output_archive'])
     output_archive_extension = json_message['output_archive_extension']

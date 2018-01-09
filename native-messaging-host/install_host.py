@@ -9,7 +9,7 @@
  * directory for more details.
 """
 
-from __future__ import print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import argparse
 import os
@@ -19,7 +19,7 @@ from os.path import expanduser
 from shutil import copyfile
 
 import common
-from common import Browser
+from common import Browser, BrowserNotSupportedException
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -48,7 +48,7 @@ def main(argv):
             browser = Browser.FIREFOX
 
         else:
-            raise common.BrowserNotSupportedException(args.browser)
+            raise BrowserNotSupportedException(args.browser)
 
         target_dir = common.get_target_dir(home_dir, browser)
 
