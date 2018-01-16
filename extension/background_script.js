@@ -10,42 +10,12 @@ var nativeMessagingHostName = "de.fu_berlin.mi.riot_app_market";
 
 chrome.runtime.onMessage.addListener(listener);
 
-function getResponseFromNativeMessagingHost(request) {
-
-    return new Promise(function(resolve, reject) {
-
-        chrome.runtime.sendNativeMessage(nativeMessagingHostName, JSON.stringify(request), function(response) {
-
-            if (chrome.runtime.lastError) {
-                reject({error: chrome.runtime.lastError.message, success: false});
-            }
-            else {
-                resolve({success: true});
-            }
-        });
-    });
-}
-
-async function testConnectionNativeMessagingHost(request) {
-
-    var responseNativeMessagingHost;
-    try {
-        responseNativeMessagingHost = await getResponseFromNativeMessagingHost(request);
-    }
-    catch(error) {
-        console.error(error);
-    }
-
-    return responseNativeMessagingHost;
-}
-
 function listener(request, sender, extensionCallback) {
 
     console.log("listened on background script");
 
     if(request.action == "test_connection_native_messaging_host") {
-        extensionCallback(testConnectionNativeMessagingHost(request));
-        //chrome.runtime.sendNativeMessage(nativeMessagingHostName, JSON.stringify(request), extensionCallback);
+        chrome.runtime.sendNativeMessage(nativeMessagingHostName, JSON.stringify(request), extensionCallback);
     }
     else {
         chrome.runtime.sendNativeMessage(nativeMessagingHostName, request, function(response) {
@@ -54,4 +24,7 @@ function listener(request, sender, extensionCallback) {
             }
         });
     }
+
+    // call callback asynchronously
+    return true;
 }
