@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+# Note that running python with the `-u` flag is required on Windows,
+# in order to ensure that stdin and stdout are opened in binary, rather
+# than text, mode.
+
 """
  * Copyright (C) 2017 Hendrik van Essen
  *
@@ -9,7 +13,7 @@
  * directory for more details.
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 
 import base64
 import json
@@ -22,6 +26,7 @@ import time
 from shutil import rmtree
 from subprocess import Popen
 
+import config
 import common
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -29,7 +34,23 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def main():
 
-    json_message = json.loads(get_message_from_stdin())
+    message = read_message_from_stdin()
+    json_message = json.loads(message)
+
+    try:
+        # just testing connectivity
+        if json_message['action'] == 'test_connection_native_messaging_host':
+
+            # print repsonse for callback within background script
+            response = {'success': True}
+            send_message(encode_message(response))
+
+            return
+
+    except Exception as e:
+        logging.error(str(e), exc_info=True)
+
+    json_message = json_message['message']
 
     output_archive_content = base64.b64decode(json_message['output_archive'])
     output_archive_extension = json_message['output_archive_extension']
@@ -75,8 +96,45 @@ def main():
         logging.error(str(e), exc_info=True)
 
 
+def write_message_to_stdout(message):
+    """
+    Write message to stdout for chrome extension, which called the native messaging host.
+    Parameter 'message' is converted to a json string.
+    WARNING: without using ports, only the first message works, further messages will be ignored
+
+    Parameters
+    ----------
+    message: array-like
+        Message to be sent, in form of a dictionary
+
+    """
+    json_message = json.dumps(message)
+
+    # pack message length as 4 byte integer.
+    message_length = struct.pack('i', len(json_message))
+
+    # send the data
+    sys.stdout.write(message_length)
+    sys.stdout.write(json_message)
+    sys.stdout.flush()
+
+
+# Encode a message for transmission, given its content.
+def encode_message(message_content):
+    encoded_content = json.dumps(message_content)
+    encoded_length = struct.pack('i', len(encoded_content))
+    return {'length': encoded_length, 'content': encoded_content}
+
+
+# Send an encoded message to stdout.
+def send_message(encoded_message):
+    sys.stdout.write(encoded_message['length'])
+    sys.stdout.write(encoded_message['content'])
+    sys.stdout.flush()
+
+
 # https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/nativeMessaging/host/native-messaging-example-host
-def get_message_from_stdin():
+def read_message_from_stdin():
     """
     Read message from stdin sent by chrome extension
 
@@ -86,15 +144,15 @@ def get_message_from_stdin():
         Input text in form of a JSON string
     """
 
-    # Read the message length (first 4 bytes).
+    # read the message length (first 4 bytes)
     text_length_bytes = sys.stdin.read(4)
     if len(text_length_bytes) == 0:
         sys.exit(0)
 
-    # Unpack message length as 4 byte integer.
+    # unpack message length as 4 byte integer
     text_length = struct.unpack('i', text_length_bytes)[0]
 
-    # Read the text (JSON object) of the message.
+    # read the data (JSON object) of the message
     text = sys.stdin.read(text_length).decode('utf-8')
 
     return text
@@ -102,7 +160,7 @@ def get_message_from_stdin():
 
 if __name__ == '__main__':
 
-    logging.basicConfig(filename='log/riot_app_market_log.txt', format='%(asctime)s [%(levelname)s]: %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+    logging.basicConfig(filename='log/riot_app_market_log.txt', format=config.LOGGING_FORMAT, datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
     try:
         main()
