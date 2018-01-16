@@ -95,17 +95,17 @@ def main():
 
 def write_message_to_stdout(message):
     """
-    Write message to stdout for chrome extension, which called the native messaging host.
+    Write message to stdout for extension, which called the native messaging host.
     Parameter 'message' is converted to a json string.
     WARNING: without using ports, only the first message works, further messages will be ignored
 
     Parameters
     ----------
-    message: array-like
+    message: array_like
         Message to be sent, in form of a dictionary
 
     """
-    json_message = json.dumps(message)
+    json_message = json.dumps(message).encode('utf-8')
 
     # pack message length as 4 byte integer.
     message_length = struct.pack('i', len(json_message))
@@ -128,15 +128,15 @@ def read_message_from_stdin():
     """
 
     # read the message length (first 4 bytes)
-    text_length_bytes = sys.stdin.read(4)
-    if len(text_length_bytes) == 0:
+    message_length_bytes = sys.stdin.read(4)
+    if len(message_length_bytes) == 0:
         sys.exit(0)
 
     # unpack message length as 4 byte integer
-    text_length = struct.unpack('i', text_length_bytes)[0]
+    message_length = struct.unpack('i', message_length_bytes)[0]
 
     # read the data (JSON object) of the message
-    text = sys.stdin.read(text_length).decode('utf-8')
+    text = sys.stdin.read(message_length).decode('utf-8')
 
     return text
 
