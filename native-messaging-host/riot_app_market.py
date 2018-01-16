@@ -1,19 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Note that running python with the `-u` flag is required on Windows,
-# in order to ensure that stdin and stdout are opened in binary, rather
-# than text, mode.
-
 """
- * Copyright (C) 2017 Hendrik van Essen
+ * Copyright (C) 2017 Hendrik van Essen and FU Berlin
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
  * directory for more details.
 """
 
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, unicode_literals
 
 import ast
 import base64
@@ -37,9 +33,6 @@ def main():
 
     message = read_message_from_stdin()
     json_message = json.loads(message)
-
-    # WORKAROUND: message is not correctly evaluated as dictionary
-    json_message = ast.literal_eval(json_message)
 
     try:
         # just testing connectivity

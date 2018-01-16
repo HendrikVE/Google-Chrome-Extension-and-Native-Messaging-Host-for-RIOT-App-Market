@@ -10,12 +10,10 @@ var nativeMessagingHostName = "de.fu_berlin.mi.riot_app_market";
 
 chrome.runtime.onMessage.addListener(listener);
 
-function listener(request, sender, extensionCallback) {
-
-    console.log("listened on background script");
+function listener(request, sender, sendResponse) {
 
     if(request.action == "test_connection_native_messaging_host") {
-        chrome.runtime.sendNativeMessage(nativeMessagingHostName, JSON.stringify(request), extensionCallback);
+        chrome.runtime.sendNativeMessage(nativeMessagingHostName, request, sendResponse);
     }
     else {
         chrome.runtime.sendNativeMessage(nativeMessagingHostName, request, function(response) {
@@ -25,6 +23,10 @@ function listener(request, sender, extensionCallback) {
         });
     }
 
-    // call callback asynchronously
+    /*
+     * The sendResponse callback is only valid if used synchronously, or if the event handler returns true to
+     * indicate that it will respond asynchronously. The sendMessage function's callback will be invoked automatically
+     * if no handlers return true or if the sendResponse callback is garbage-collected.
+    */
     return true;
 }

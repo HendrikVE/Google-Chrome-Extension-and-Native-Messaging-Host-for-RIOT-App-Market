@@ -15,20 +15,23 @@ window.addEventListener("message", function(event) {
 });
 
 // add a value to let the website know, that the extension is installed
-document.body.classList.add("rapstore_extension_installed");
+addToClassList("rapstore_extension_installed");
 
 // test connection to native messaging host through background script
 var connectionTestRequest = {action: "test_connection_native_messaging_host"}
+
 chrome.runtime.sendMessage(connectionTestRequest, function(response) {
 
     if (chrome.runtime.lastError) {
         console.error(chrome.runtime.lastError.message);
     }
 
-    console.log("send to background script");
-
     if (response.success == true) {
         // add a value to let the website know, that the native messaging host is installed
-        document.body.classList.add("rapstore_native_messaging_host_installed");
+        addToClassList("rapstore_native_messaging_host_installed");
     }
 });
+
+function addToClassList(item) {
+    document.body.classList.add(item);
+}
