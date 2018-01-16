@@ -25,7 +25,9 @@
             "*://141.22.28.91/*",
             "*://rapstore.cladmi.eu/*"
         ],
-        "js": ["content_script.js"]
+        "js": ["content_script.js"],
+        "all_frames": true,
+        "run_at": "document_end"
     }],
 
     "permissions": [

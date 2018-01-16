@@ -15,6 +15,7 @@
 
 from __future__ import absolute_import, print_function
 
+import ast
 import base64
 import json
 import logging
@@ -37,13 +38,16 @@ def main():
     message = read_message_from_stdin()
     json_message = json.loads(message)
 
+    # WORKAROUND: message is not correctly evaluated as dictionary
+    json_message = ast.literal_eval(json_message)
+
     try:
         # just testing connectivity
         if json_message['action'] == 'test_connection_native_messaging_host':
 
             # print repsonse for callback within background script
             response = {'success': True}
-            send_message(encode_message(response))
+            write_message_to_stdout(response)
 
             return
 
@@ -116,20 +120,6 @@ def write_message_to_stdout(message):
     # send the data
     sys.stdout.write(message_length)
     sys.stdout.write(json_message)
-    sys.stdout.flush()
-
-
-# Encode a message for transmission, given its content.
-def encode_message(message_content):
-    encoded_content = json.dumps(message_content)
-    encoded_length = struct.pack('i', len(encoded_content))
-    return {'length': encoded_length, 'content': encoded_content}
-
-
-# Send an encoded message to stdout.
-def send_message(encoded_message):
-    sys.stdout.write(encoded_message['length'])
-    sys.stdout.write(encoded_message['content'])
     sys.stdout.flush()
 
 
