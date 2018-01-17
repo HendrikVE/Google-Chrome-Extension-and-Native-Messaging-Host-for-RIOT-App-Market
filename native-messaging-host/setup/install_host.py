@@ -18,6 +18,9 @@ import sys
 from os.path import expanduser
 from shutil import copyfile
 
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.join(CUR_DIR, os.pardir))
+
 import common
 from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
 
@@ -38,7 +41,7 @@ def main(argv):
     try:
         browser = common.get_browser(args.browser)
 
-    except common.BrowserNotSupportedException as e:
+    except BrowserNotSupportedException as e:
         print(str(e))
         return
 
@@ -63,7 +66,7 @@ def install_manifest_file(target_dir, browser):
     target_file = os.path.join(target_dir, json_manifest_name)
 
     # replace HOST_PATH placeholder in the manifest
-    host_path = '%s/riot_app_market.py' % CUR_DIR
+    host_path = '%s/riot_app_market.py' % os.path.normpath(os.path.join(CUR_DIR, os.pardir))
     replace_host_path(target_file, host_path)
 
     # replace ALLOWED_ATTRIBUTE placeholder in the manifest

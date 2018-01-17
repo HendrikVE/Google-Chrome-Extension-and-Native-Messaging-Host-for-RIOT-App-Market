@@ -14,8 +14,16 @@ from __future__ import absolute_import, print_function, unicode_literals
 import errno
 import os
 import subprocess
+import sys
 
-from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
+# append root of the python code tree to sys.apth so that imports are working
+#   alternative: add path to riotam_backend to the PYTHONPATH environment variable, but this includes one more step
+#   which could be forget
+
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.join(CUR_DIR, os.pardir))
+
+from setup.browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
 
 HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
 FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'

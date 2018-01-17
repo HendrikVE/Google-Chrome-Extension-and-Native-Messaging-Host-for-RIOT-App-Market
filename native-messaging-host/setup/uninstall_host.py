@@ -16,6 +16,9 @@ import os
 import sys
 from os.path import expanduser
 
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.join(CUR_DIR, os.pardir))
+
 import common
 from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
 
@@ -34,7 +37,7 @@ def main(argv):
     try:
         browser = common.get_browser(args.browser)
 
-    except common.BrowserNotSupportedException as e:
+    except BrowserNotSupportedException as e:
         print(str(e))
         return
 
