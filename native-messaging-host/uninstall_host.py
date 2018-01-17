@@ -16,7 +16,8 @@ import os
 import sys
 from os.path import expanduser
 
-from common import get_target_dir, BrowserNotSupportedException, HOST_NAME
+import common
+from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
 
 
 def main(argv):
@@ -33,30 +34,42 @@ def main(argv):
     home_dir = expanduser('~')
 
     try:
-        target_dir = get_target_dir(home_dir, args.browser)
+        if args.browser == 'chrome':
+            browser = Chrome()
+
+        elif args.browser == 'chromium':
+            browser = Chromium()
+
+        elif args.browser == 'firefox':
+            browser = Firefox()
+
+        else:
+            raise BrowserNotSupportedException(args.browser)
+
+        target_dir = common.get_target_dir(home_dir, browser)
 
     except BrowserNotSupportedException as e:
-        print (str(e))
+        print(str(e))
         return
 
     try:
-        os.remove('{0}/{1}.json'.format(target_dir, HOST_NAME))
+        os.remove('{0}/{1}.json'.format(target_dir, common.HOST_NAME))
 
     except OSError:
         # we are not interested in missing files when removing anyway
         pass
 
-    print('Native messaging host {0} has been uninstalled from {1}'.format(HOST_NAME, args.browser))
+    print('Native messaging host {0} has been uninstalled from {1}'.format(common.HOST_NAME, args.browser))
 
 
 def init_argparse():
 
     parser = argparse.ArgumentParser(description='Build RIOT OS')
 
-    parser.add_argument('--browser',
-                        dest='browser', action='store',
-                        required=True,
-                        help='the browser to install the host for. (chrome or chromium)')
+    parser.add_argument('browser',
+                        action='store',
+                        choices=['chrome', 'chromium', 'firefox'],
+                        help='the browser to install the host for')
 
     return parser
 

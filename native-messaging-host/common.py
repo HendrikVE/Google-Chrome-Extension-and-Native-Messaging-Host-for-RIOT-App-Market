@@ -39,7 +39,6 @@ def get_target_dir(home_dir, browser):
         target directory
 
     """
-
     target_dir = None
     if is_mac_os():
         if is_root_user():
@@ -98,7 +97,7 @@ def create_directories(path):
     Raises
     -------
     OSError
-        Something fails creating directories, except errno is EEXIST
+        Something fails creating directories, except directoy already exist
 
     """
     try:

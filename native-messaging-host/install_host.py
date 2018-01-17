@@ -61,7 +61,9 @@ def main(argv):
 
     # copy native messaging host manifest
     json_manifest_name = '%s.json' % common.HOST_NAME
-    copyfile(os.path.join(CUR_DIR, json_manifest_name), os.path.join(target_dir, json_manifest_name))
+    source_manifest =os.path.join(CUR_DIR, json_manifest_name)
+    target_manifest = os.path.join(target_dir, json_manifest_name)
+    copyfile(source_manifest, target_manifest)
 
     target_file = os.path.join(target_dir, json_manifest_name)
 
