@@ -31,26 +31,15 @@ def main(argv):
         print (str(e))
         return
 
-    home_dir = expanduser('~')
-
     try:
-        if args.browser == 'chrome':
-            browser = Chrome()
+        browser = common.get_browser(args.browser)
 
-        elif args.browser == 'chromium':
-            browser = Chromium()
-
-        elif args.browser == 'firefox':
-            browser = Firefox()
-
-        else:
-            raise BrowserNotSupportedException(args.browser)
-
-        target_dir = common.get_target_dir(home_dir, browser)
-
-    except BrowserNotSupportedException as e:
+    except common.BrowserNotSupportedException as e:
         print(str(e))
         return
+
+    home_dir = expanduser('~')
+    target_dir = common.get_target_dir(home_dir, browser)
 
     try:
         os.remove('{0}/{1}.json'.format(target_dir, common.HOST_NAME))

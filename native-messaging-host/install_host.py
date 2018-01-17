@@ -35,26 +35,15 @@ def main(argv):
         print (str(e))
         return
 
-    home_dir = expanduser('~')
-
     try:
-        if args.browser == 'chrome':
-            browser = Chrome()
-
-        elif args.browser == 'chromium':
-            browser = Chromium()
-
-        elif args.browser == 'firefox':
-            browser = Firefox()
-
-        else:
-            raise BrowserNotSupportedException(args.browser)
-
-        target_dir = common.get_target_dir(home_dir, browser)
+        browser = common.get_browser(args.browser)
 
     except common.BrowserNotSupportedException as e:
         print(str(e))
         return
+
+    home_dir = expanduser('~')
+    target_dir = common.get_target_dir(home_dir, browser)
 
     # create directory to store native messaging host
     common.create_directories(target_dir)

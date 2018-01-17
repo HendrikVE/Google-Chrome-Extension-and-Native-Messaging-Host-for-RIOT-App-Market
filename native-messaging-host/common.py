@@ -22,6 +22,20 @@ FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'
 CHROME_EXTENSION_ID = 'knldjmfmopnpolahpmmgbagdohdnhkik'
 
 
+def get_browser(browser_name):
+    
+    if browser_name == 'chrome':
+        return Chrome()
+
+    elif browser_name == 'chromium':
+        return Chromium()
+
+    elif browser_name == 'firefox':
+        return Firefox()
+
+    raise BrowserNotSupportedException(browser_name)
+
+
 def get_target_dir(home_dir, browser):
     """
     Get the target dir for installing native messaging host
