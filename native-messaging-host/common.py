@@ -15,21 +15,11 @@ import errno
 import os
 import subprocess
 
+from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
+
 HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
 FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'
 CHROME_EXTENSION_ID = 'knldjmfmopnpolahpmmgbagdohdnhkik'
-
-
-class Browser(object):
-    CHROME = 'chrome'
-    CHROMIUM = 'chromium'
-    FIREFOX = 'firefox'
-
-
-class BrowserNotSupportedException(Exception):
-
-    def __init__(self, browser_name):
-        super(BrowserNotSupportedException, self).__init__('%s is not supported' % browser_name)
 
 
 def get_target_dir(home_dir, browser):
@@ -53,37 +43,18 @@ def get_target_dir(home_dir, browser):
     target_dir = None
     if is_mac_os():
         if is_root_user():
-            if is_chrome(browser):
-                target_dir = '/Library/Google/Chrome/NativeMessagingHosts'
-
-            elif is_chromium(browser):
-                target_dir = '/Library/Application Support/Chromium/NativeMessagingHosts'
+            target_dir = browser.get_root_install_path(True)
 
         else:
-            if is_chrome(browser):
-                target_dir = '%s/Library/Application Support/Google/Chrome/NativeMessagingHosts' % home_dir
-
-            elif is_chromium(browser):
-                target_dir = '%s/Library/Application Support/Chromium/NativeMessagingHosts' % home_dir
+            target_dir = browser.get_user_install_path(home_dir, True)
 
     else:
         # we are supposing it is linux
         if is_root_user():
-            if is_chrome(browser):
-                target_dir = '/etc/opt/chrome/native-messaging-hosts'
-
-            elif is_chromium(browser):
-                target_dir = '/etc/chromium/native-messaging-hosts'
+            target_dir = browser.get_root_install_path(False)
 
         else:
-            if is_chrome(browser):
-                target_dir = '%s/.config/google-chrome/NativeMessagingHosts' % home_dir
-
-            elif is_chromium(browser):
-                target_dir = '%s/.config/chromium/NativeMessagingHosts' % home_dir
-
-            elif is_firefox(browser):
-                target_dir = '%s/.mozilla/native-messaging-hosts' % home_dir
+            target_dir = browser.get_user_install_path(home_dir, False)
 
     if target_dir is None:
         raise BrowserNotSupportedException(browser)
@@ -93,14 +64,14 @@ def get_target_dir(home_dir, browser):
 
 def get_allowed_attribute(browser):
 
-    if browser == Browser.CHROME or browser == Browser.CHROMIUM:
+    if browser.get_name() == 'chrome' or browser.get_name() == 'chromium':
         return '"allowed_origins": [ "chrome-extension://%s/" ]' % CHROME_EXTENSION_ID
 
-    elif browser == Browser.FIREFOX:
+    elif browser.get_name() == 'firefox':
         return '"allowed_extensions": [ "%s" ]' % FIREFOX_EXTENSION_ID
 
     else:
-        raise BrowserNotSupportedException(browser)
+        raise BrowserNotSupportedException(browser.get_name())
 
 
 def is_mac_os():
@@ -113,18 +84,6 @@ def is_root_user():
 
     output = subprocess.check_output(['whoami'])
     return output.strip() == 'root'
-
-
-def is_chrome(browser):
-    return browser == Browser.CHROME
-
-
-def is_chromium(browser):
-    return browser == Browser.CHROMIUM
-
-
-def is_firefox(browser):
-    return browser == Browser.FIREFOX
 
 
 def create_directories(path):

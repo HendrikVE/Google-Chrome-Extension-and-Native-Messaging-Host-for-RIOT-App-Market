@@ -19,7 +19,7 @@ from os.path import expanduser
 from shutil import copyfile
 
 import common
-from common import Browser, BrowserNotSupportedException
+from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -39,13 +39,13 @@ def main(argv):
 
     try:
         if args.browser == 'chrome':
-            browser = Browser.CHROME
+            browser = Chrome()
 
         elif args.browser == 'chromium':
-            browser = Browser.CHROMIUM
+            browser = Chromium()
 
         elif args.browser == 'firefox':
-            browser = Browser.FIREFOX
+            browser = Firefox()
 
         else:
             raise BrowserNotSupportedException(args.browser)
@@ -77,17 +77,17 @@ def main(argv):
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print ('Native messaging host {0} has been installed for {1}'.format(common.HOST_NAME, browser))
+    print ('Native messaging host {0} has been installed for {1} in {2}'.format(common.HOST_NAME, browser.get_name(), target_dir))
 
 
 def init_argparse():
 
     parser = argparse.ArgumentParser(description='Build RIOT OS')
 
-    parser.add_argument('--browser',
-                        dest='browser', action='store',
-                        required=True,
-                        help='the browser to install the host for. (chrome or chromium)')
+    parser.add_argument('browser',
+                        action='store',
+                        choices=['chrome', 'chromium', 'firefox'],
+                        help='the browser to install the host for')
 
     return parser
 
