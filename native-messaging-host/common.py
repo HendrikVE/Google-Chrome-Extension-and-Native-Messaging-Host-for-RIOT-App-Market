@@ -36,9 +36,9 @@ def get_browser(browser_name):
     raise BrowserNotSupportedException(browser_name)
 
 
-def get_target_dir(home_dir, browser):
+def get_target_dirs(home_dir, browser):
     """
-    Get the target dir for installing native messaging host
+    Get the target directories for installing native messaging host
 
     Parameters
     ----------
@@ -49,30 +49,29 @@ def get_target_dir(home_dir, browser):
 
     Returns
     -------
-    string
-        target directory
+    array_like
+        target directories
 
     """
-    target_dir = None
     if is_mac_os():
         if is_root_user():
-            target_dir = browser.get_root_install_path(True)
+            target_dirs = browser.get_root_install_path(True)
 
         else:
-            target_dir = browser.get_user_install_path(home_dir, True)
+            target_dirs = browser.get_user_install_path(home_dir, True)
 
     else:
         # we are supposing it is linux
         if is_root_user():
-            target_dir = browser.get_root_install_path(False)
+            target_dirs = browser.get_root_install_path(False)
 
         else:
-            target_dir = browser.get_user_install_path(home_dir, False)
+            target_dirs = browser.get_user_install_path(home_dir, False)
 
-    if target_dir is None:
+    if target_dirs is None:
         raise BrowserNotSupportedException(browser)
 
-    return target_dir
+    return target_dirs
 
 
 def get_allowed_attribute(browser):

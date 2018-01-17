@@ -43,14 +43,20 @@ def main(argv):
         return
 
     home_dir = expanduser('~')
-    target_dir = common.get_target_dir(home_dir, browser)
+    target_dirs = common.get_target_dirs(home_dir, browser)
+
+    for dir in target_dirs:
+        install_manifest_file(dir, browser)
+
+
+def install_manifest_file(target_dir, browser):
 
     # create directory to store native messaging host
     common.create_directories(target_dir)
 
     # copy native messaging host manifest
     json_manifest_name = '%s.json' % common.HOST_NAME
-    source_manifest =os.path.join(CUR_DIR, json_manifest_name)
+    source_manifest = os.path.join(CUR_DIR, json_manifest_name)
     target_manifest = os.path.join(target_dir, json_manifest_name)
     copyfile(source_manifest, target_manifest)
 
@@ -68,7 +74,7 @@ def main(argv):
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print ('Native messaging host {0} has been installed for {1} in {2}'.format(common.HOST_NAME, browser.get_name(), target_dir))
+    print('Native messaging host {0} has been installed for {1} in {2}\n'.format(common.HOST_NAME, browser.get_name(), target_dir))
 
 
 def init_argparse():

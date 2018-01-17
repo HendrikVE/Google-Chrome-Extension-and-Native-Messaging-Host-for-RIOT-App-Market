@@ -39,7 +39,13 @@ def main(argv):
         return
 
     home_dir = expanduser('~')
-    target_dir = common.get_target_dir(home_dir, browser)
+    target_dirs = common.get_target_dirs(home_dir, browser)
+
+    for dir in target_dirs:
+        uninstall_manifest(dir, browser)
+
+
+def uninstall_manifest(target_dir, browser):
 
     try:
         os.remove('{0}/{1}.json'.format(target_dir, common.HOST_NAME))
@@ -48,7 +54,7 @@ def main(argv):
         # we are not interested in missing files when removing anyway
         pass
 
-    print('Native messaging host {0} has been uninstalled from {1}'.format(common.HOST_NAME, args.browser))
+    print('Native messaging host {0} at {1} has been uninstalled from {2}\n'.format(common.HOST_NAME, target_dir, browser.get_name()))
 
 
 def init_argparse():
