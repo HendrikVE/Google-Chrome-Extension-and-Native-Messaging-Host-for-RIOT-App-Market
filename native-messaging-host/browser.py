@@ -13,6 +13,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 
 class Browser(object):
+
     name = None
 
     def __init__(self, name):
@@ -29,6 +30,7 @@ class Browser(object):
 
 
 class Firefox(Browser):
+
     name = 'firefox'
 
     def __init__(self):
@@ -37,21 +39,24 @@ class Firefox(Browser):
     def get_root_install_path(self, isMacOS):
 
         if isMacOS:
-            return None
+            return ['/Library/Application Support/Mozilla/NativeMessagingHosts/']
 
         else:
-            return None
+            return ['/usr/lib/mozilla/native-messaging-hosts/',
+                    '/usr/lib64/mozilla/native-messaging-hosts/',
+                    '/usr/share/mozilla/native-messaging-hosts/']
 
     def get_user_install_path(self, home_dir, isMacOS):
 
         if isMacOS:
-            return None
+            return ['%s/Library/Application Support/Mozilla/NativeMessagingHosts/' % home_dir]
 
         else:
-            return '%s/.mozilla/native-messaging-hosts' % home_dir
+            return ['%s/.mozilla/native-messaging-hosts' % home_dir]
 
 
 class Chrome(Browser):
+
     name = 'chrome'
 
     def __init__(self):
@@ -60,21 +65,22 @@ class Chrome(Browser):
     def get_root_install_path(self, isMacOS):
 
         if isMacOS:
-            return '/Library/Google/Chrome/NativeMessagingHosts'
+            return ['/Library/Google/Chrome/NativeMessagingHosts']
 
         else:
-            return '/etc/opt/chrome/native-messaging-hosts'
+            return ['/etc/opt/chrome/native-messaging-hosts']
 
     def get_user_install_path(self, home_dir, isMacOS):
 
         if isMacOS:
-            return '%s/Library/Application Support/Google/Chrome/NativeMessagingHosts' % home_dir
+            return ['%s/Library/Application Support/Google/Chrome/NativeMessagingHosts' % home_dir]
 
         else:
-            return '%s/.config/google-chrome/NativeMessagingHosts' % home_dir
+            return ['%s/.config/google-chrome/NativeMessagingHosts' % home_dir]
 
 
 class Chromium(Browser):
+
     name = 'chromium'
 
     def __init__(self):
@@ -83,18 +89,18 @@ class Chromium(Browser):
     def get_root_install_path(self, isMacOS):
 
         if isMacOS:
-            return '/Library/Application Support/Chromium/NativeMessagingHosts'
+            return ['/Library/Application Support/Chromium/NativeMessagingHosts']
 
         else:
-            return '/etc/chromium/native-messaging-hosts'
+            return ['/etc/chromium/native-messaging-hosts']
 
     def get_user_install_path(self, home_dir, isMacOS):
 
         if isMacOS:
-            return '%s/Library/Application Support/Chromium/NativeMessagingHosts' % home_dir
+            return ['%s/Library/Application Support/Chromium/NativeMessagingHosts' % home_dir]
 
         else:
-            return '%s/.config/chromium/NativeMessagingHosts' % home_dir
+            return ['%s/.config/chromium/NativeMessagingHosts' % home_dir]
 
 
 class BrowserNotSupportedException(Exception):

@@ -23,7 +23,7 @@ CHROME_EXTENSION_ID = 'knldjmfmopnpolahpmmgbagdohdnhkik'
 
 
 def get_browser(browser_name):
-    
+
     if browser_name == 'chrome':
         return Chrome()
 
