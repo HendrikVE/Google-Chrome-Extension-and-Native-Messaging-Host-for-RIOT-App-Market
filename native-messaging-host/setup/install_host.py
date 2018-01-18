@@ -129,6 +129,6 @@ if __name__ == '__main__':
 
     if ' ' in CUR_DIR:
         print('this repository needs to be cloned to a path without spaces before installing the native messaging host!')
-        
+
     else:
         main(sys.argv[1:])

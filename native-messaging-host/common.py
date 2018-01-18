@@ -27,7 +27,7 @@ from setup.browser import Chrome, Chromium, Firefox, BrowserNotSupportedExceptio
 
 HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
 FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'
-CHROME_EXTENSION_ID = 'knldjmfmopnpolahpmmgbagdohdnhkik'
+CHROME_EXTENSION_ID = 'omfbdeblphficlecofpbkdcchnghnkhc'
 
 
 def get_browser(browser_name):
