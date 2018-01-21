@@ -76,7 +76,7 @@ def install_manifest_file(target_dir, browser):
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print('Native messaging host {0} has been installed for {1} in {2}\n'.format(common.HOST_NAME, browser.get_name(), target_dir))
+    print('Native messaging host {0} has been installed for {1} in {2}'.format(common.HOST_NAME, browser.get_name(), target_dir))
 
 
 def init_argparse():

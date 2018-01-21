@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import sys
+import subprocess
 from subprocess import Popen
 
 import utility.common as common
@@ -49,7 +50,9 @@ def main(argv):
 def install_extension(browser):
 
     if isinstance(browser, Firefox):
-        Popen(['firefox', EXTENSION_XPI_PATH])
+        origin_user = subprocess.check_output(['logname']).strip()
+
+        Popen(['sudo', '-u', origin_user, 'firefox', EXTENSION_XPI_PATH])
 
     elif isinstance(browser, Chrome):
         install_chrome_based('/usr/share/google-chrome/extensions/')

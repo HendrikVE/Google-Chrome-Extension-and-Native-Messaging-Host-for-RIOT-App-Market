@@ -1,4 +1,4 @@
-# Google Chrome extension and native messaging host for RIOT App Market
+# Browser integration for RAPstore
 
 ## Requirements
 1. **sudo apt-get install git python make openocd**
@@ -9,26 +9,31 @@
 
 \* Notice: the path must not contain spaces
 
-## Install the extension
+## Install
 
-### Google Chrome and Chromium
+### Complete (extension and native messaging host)
+1. run **sudo install.py <your_browser>**
+2. for further information look at the instructions below
+
+### Install the extension
+
+#### Google Chrome and Chromium
 1. open a terminal
 2. run **sudo python install_extension.py <your_browser>**
 3. you need to restart chrome/ chromium
 4. extension should be installed now
 
-### Firefox
-
+#### Firefox
 1. open a terminal
 2. run **python install_extension.py firefox**
 3. Firefox will open and ask for a confirmation
 4. click on **Add**
 
-## Install the Native Messaging Host
+### Install the Native Messaging Host
 1. open a terminal
 2. run **python install_host.py <your_browser>**
 
-### More Information
+## More Information
 Please ignore upcoming warnings, they are caused by a shared codebase for firefox and chrome
 
 Graphics are editable with [yEd](http://www.yworks.com/products/yed "http://www.yworks.com/products/yed")
