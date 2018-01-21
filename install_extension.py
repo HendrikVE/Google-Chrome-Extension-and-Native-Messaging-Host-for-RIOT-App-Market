@@ -12,18 +12,16 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import argparse
-import json
 import os
-import sys
 import subprocess
-from subprocess import Popen
+import sys
 
 import utility.common as common
 from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-EXTENSION_XPI_PATH = os.path.join('dist', 'extension', 'firefox', 'rapstore-%s.xpi' % common.EXTENSION_VERSION)
-EXTENSION_CRX_PATH = os.path.join('dist', 'extension', 'chrome', 'rapstore-%s.crx' % common.EXTENSION_VERSION)
+EXTENSION_XPI_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'firefox', 'rapstore-%s.xpi' % common.EXTENSION_VERSION)
+EXTENSION_CRX_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'chrome', 'rapstore-%s.crx' % common.EXTENSION_VERSION)
 
 
 def main(argv):
@@ -52,30 +50,25 @@ def install_extension(browser):
     if isinstance(browser, Firefox):
         origin_user = subprocess.check_output(['logname']).strip()
 
-        Popen(['sudo', '-u', origin_user, 'firefox', EXTENSION_XPI_PATH])
+        # can't run firefox as root to install, because of problems
+        output = subprocess.check_output(['sudo', '-u', origin_user, 'firefox', EXTENSION_XPI_PATH],
+                                         stderr=subprocess.STDOUT)
+        print(output)
 
     elif isinstance(browser, Chrome):
-        install_chrome_based('/usr/share/google-chrome/extensions/')
+        output = subprocess.check_output(['sudo', 'python', '_install_chrome_based_extension.py',
+                                          '/usr/share/google-chrome/extensions/', EXTENSION_CRX_PATH],
+                                         stderr=subprocess.STDOUT)
+        print(output)
 
     elif isinstance(browser, Chromium):
-        install_chrome_based('/usr/share/chromium-browser/extensions/')
+        output = subprocess.check_output(['sudo', 'python', '_install_chrome_based_extension.py',
+                                          '/usr/share/chromium-browser/extensions/', EXTENSION_CRX_PATH],
+                                         stderr=subprocess.STDOUT)
+        print(output)
 
     else:
         raise BrowserNotSupportedException(browser.get_name())
-
-
-def install_chrome_based(dest_path):
-    dest = os.path.join(dest_path, common.CHROME_EXTENSION_ID + '.json')
-
-    common.create_directories(dest_path)
-
-    json_file_content = {
-        'external_crx': os.path.abspath(EXTENSION_CRX_PATH),
-        'external_version': common.EXTENSION_VERSION,
-    }
-
-    with open(dest, 'w') as preferences_file:
-        preferences_file.write(json.dumps(json_file_content))
 
 
 def init_argparse():
