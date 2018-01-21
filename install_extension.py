@@ -12,15 +12,17 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import argparse
+import json
 import os
 import sys
 from subprocess import Popen
 
-CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-EXTENSION_XPI_PATH = os.path.join('src', 'extension', 'rapstore-1.0.6-an+fx-mac.xpi')
-
 import utility.common as common
 from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
+
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+EXTENSION_XPI_PATH = os.path.join('dist', 'extension', 'firefox', 'rapstore-%s.xpi' % common.EXTENSION_VERSION)
+EXTENSION_CRX_PATH = os.path.join('dist', 'extension', 'chrome', 'rapstore-%s.crx' % common.EXTENSION_VERSION)
 
 
 def main(argv):
@@ -50,10 +52,27 @@ def install_extension(browser):
         Popen(['firefox', EXTENSION_XPI_PATH])
 
     elif isinstance(browser, Chrome):
-        print('chrome not supported yet!')
+        install_chrome_based('/usr/share/google-chrome/extensions/')
 
     elif isinstance(browser, Chromium):
-        print('chromium not supported yet!')
+        install_chrome_based('/usr/share/chromium-browser/extensions/')
+
+    else:
+        raise BrowserNotSupportedException(browser.get_name())
+
+
+def install_chrome_based(dest_path):
+    dest = os.path.join(dest_path, common.CHROME_EXTENSION_ID + '.json')
+
+    common.create_directories(dest_path)
+
+    json_file_content = {
+        'external_crx': os.path.abspath(EXTENSION_CRX_PATH),
+        'external_version': common.EXTENSION_VERSION,
+    }
+
+    with open(dest, 'w') as preferences_file:
+        preferences_file.write(json.dumps(json_file_content))
 
 
 def init_argparse():

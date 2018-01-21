@@ -7,7 +7,7 @@
 
     <em:name>RAPstore</em:name>
     <em:id>rapstore.extension@fu-berlin.de</em:id>
-    <em:version>1.0.5</em:version>
+    <em:version>1.0.6</em:version>
     <em:type>2</em:type>
 
     <em:targetApplication>
