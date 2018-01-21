@@ -1,11 +1,8 @@
 # Google Chrome extension and native messaging host for RIOT App Market
 
 ## Requirements
-1. **sudo apt-get install git**
-2. **sudo apt-get install python**
-1. **sudo apt-get install make**
-1. **sudo apt-get install openocd**
-3. navigate with a terminal in to the directory where you want the extension to be stored at \*, then run:
+1. **sudo apt-get install git python make openocd**
+2. navigate with a terminal in to the directory where you want the extension to be stored at \*, then run:
    <br>**git clone https://github.com/riot-appstore/riotam-browser-integration**
 
 \* Notice: the path must not contain spaces
@@ -21,6 +18,14 @@
 Please ignore upcoming warnings, they are caused by a shared codebase for firefox and chrome
 
 ## Install extension for Firefox
+
+#### Permanent
+1. open a terminal
+2. run **python install_extension.py firefox**
+3. Firefox will open and ask for a confirmation
+4. click on **Add**
+
+#### Temporary
 1. Open Firefox
 2. go to **about:debugging#addons** via the address bar
 3. click on **Load Temporary Add-on**
@@ -31,8 +36,7 @@ Please ignore upcoming warnings, they are caused by a shared codebase for firefo
 
 ## Install Native Messaging Host
 1. open a terminal
-2. type **cd <to_replace>/riotam-chrome-integration/native-messaging-host/setup**
-3. run **python install_host.py your_browser** (your_browser has to be replaced by **chrome**, **chromium** or **firefox**)
+2. run **python install_host.py <your_browser>**
 
 ### More Information
 Graphics are editable with [yEd](http://www.yworks.com/products/yed "http://www.yworks.com/products/yed")
