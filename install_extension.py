@@ -19,31 +19,41 @@ from subprocess import Popen
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 EXTENSION_XPI_PATH = os.path.join('src', 'extension', 'rapstore-1.0.6-an+fx-mac.xpi')
 
+import utility.common as common
+from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
+
 
 def main(argv):
-    """
-        parser = init_argparse()
 
-        try:
-            args = parser.parse_args(argv)
+    parser = init_argparse()
 
-        except Exception as e:
-            print (str(e))
-            return
+    try:
+        args = parser.parse_args(argv)
 
-        try:
-            browser = common.get_browser(args.browser)
+    except Exception as e:
+        print (str(e))
+        return
 
-        except BrowserNotSupportedException as e:
-            print(str(e))
-            return
-    """
-    install_extension()
+    try:
+        browser = common.get_browser(args.browser)
+
+    except BrowserNotSupportedException as e:
+        print(str(e))
+        return
+
+    install_extension(browser)
 
 
-def install_extension():
+def install_extension(browser):
 
-    Popen(['firefox', EXTENSION_XPI_PATH])
+    if isinstance(browser, Firefox):
+        Popen(['firefox', EXTENSION_XPI_PATH])
+
+    elif isinstance(browser, Chrome):
+        print('chrome not supported yet!')
+
+    elif isinstance(browser, Chromium):
+        print('chromium not supported yet!')
 
 
 def init_argparse():
