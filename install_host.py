@@ -18,13 +18,13 @@ import sys
 from os.path import expanduser
 from shutil import copyfile
 
+from utility.common import HOST_NAME, get_browser, get_target_dirs, create_directories, get_allowed_attribute
+from utility.browser import BrowserNotSupportedException
+
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
 HOST_PATH = os.path.join(CUR_DIR, 'src', 'native-messaging-host', 'riot_app_market.py')
 HOST_MANIFEST_PATH = os.path.join(CUR_DIR, 'src', 'native-messaging-host', 'de.fu_berlin.mi.riot_app_market.json')
-
-import utility.common as common
-from utility.browser import BrowserNotSupportedException
 
 
 def main(argv):
@@ -39,14 +39,14 @@ def main(argv):
         return
 
     try:
-        browser = common.get_browser(args.browser)
+        browser = get_browser(args.browser)
 
     except BrowserNotSupportedException as e:
         print(str(e))
         return
 
     home_dir = expanduser('~')
-    target_dirs = common.get_target_dirs(home_dir, browser)
+    target_dirs = get_target_dirs(home_dir, browser)
 
     for dir in target_dirs:
         install_manifest_file(dir, browser)
@@ -55,10 +55,10 @@ def main(argv):
 def install_manifest_file(target_dir, browser):
 
     # create directory to store native messaging host
-    common.create_directories(target_dir)
+    create_directories(target_dir)
 
     # copy native messaging host manifest
-    json_manifest_name = '%s.json' % common.HOST_NAME
+    json_manifest_name = '%s.json' % HOST_NAME
     source_manifest = HOST_MANIFEST_PATH
     target_manifest = os.path.join(target_dir, json_manifest_name)
     copyfile(source_manifest, target_manifest)
@@ -76,7 +76,7 @@ def install_manifest_file(target_dir, browser):
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print('Native messaging host {0} has been installed for {1} in {2}'.format(common.HOST_NAME, browser.get_name(), target_dir))
+    print('Native messaging host {0} has been installed for {1} in {2}'.format(HOST_NAME, browser.get_name(), target_dir))
 
 
 def init_argparse():
@@ -116,7 +116,7 @@ def firefox_chrome_compatibility_switch(path, browser):
 
             for line in old_file.readlines():
                 if 'ALLOWED_ATTRIBUTE' in line:
-                    allowed_attribute = common.get_allowed_attribute(browser)
+                    allowed_attribute = get_allowed_attribute(browser)
                     line = line.replace('ALLOWED_ATTRIBUTE', allowed_attribute)
 
                 file.write(line)

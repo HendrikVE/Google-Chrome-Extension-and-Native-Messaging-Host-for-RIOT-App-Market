@@ -16,12 +16,12 @@ import os
 import subprocess
 import sys
 
-import utility.common as common
+from utility.common import EXTENSION_VERSION, get_browser
 from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-EXTENSION_XPI_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'firefox', 'rapstore-%s.xpi' % common.EXTENSION_VERSION)
-EXTENSION_CRX_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'chrome', 'rapstore-%s.crx' % common.EXTENSION_VERSION)
+EXTENSION_XPI_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'firefox', 'rapstore-%s.xpi' % EXTENSION_VERSION)
+EXTENSION_CRX_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'chrome', 'rapstore-%s.crx' % EXTENSION_VERSION)
 
 
 def main(argv):
@@ -36,7 +36,7 @@ def main(argv):
         return
 
     try:
-        browser = common.get_browser(args.browser)
+        browser = get_browser(args.browser)
 
     except BrowserNotSupportedException as e:
         print(str(e))

@@ -16,10 +16,10 @@ import os
 import sys
 from os.path import expanduser
 
-CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-
-import utility.common as common
+from utility.common import HOST_NAME, get_browser, get_target_dirs
 from utility.browser import BrowserNotSupportedException
+
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def main(argv):
@@ -34,14 +34,14 @@ def main(argv):
         return
 
     try:
-        browser = common.get_browser(args.browser)
+        browser = get_browser(args.browser)
 
     except BrowserNotSupportedException as e:
         print(str(e))
         return
 
     home_dir = expanduser('~')
-    target_dirs = common.get_target_dirs(home_dir, browser)
+    target_dirs = get_target_dirs(home_dir, browser)
 
     for dir in target_dirs:
         uninstall_manifest(dir, browser)
@@ -50,13 +50,13 @@ def main(argv):
 def uninstall_manifest(target_dir, browser):
 
     try:
-        os.remove('{0}/{1}.json'.format(target_dir, common.HOST_NAME))
+        os.remove('{0}/{1}.json'.format(target_dir, HOST_NAME))
 
     except OSError:
         # we are not interested in missing files when removing anyway
         pass
 
-    print('Native messaging host {0} at {1} has been uninstalled from {2}\n'.format(common.HOST_NAME, target_dir, browser.get_name()))
+    print('Native messaging host {0} at {1} has been uninstalled from {2}\n'.format(HOST_NAME, target_dir, browser.get_name()))
 
 
 def init_argparse():
