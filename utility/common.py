@@ -21,9 +21,8 @@ import sys
 #   which could be forget
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(os.path.join(CUR_DIR, os.pardir))
 
-from setup.browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
+from .browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
 
 HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
 FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'

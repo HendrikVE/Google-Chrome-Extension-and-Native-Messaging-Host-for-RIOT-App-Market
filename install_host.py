@@ -19,12 +19,12 @@ from os.path import expanduser
 from shutil import copyfile
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-sys.path.append(os.path.join(CUR_DIR, os.pardir))
 
-import common
-from browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
+HOST_PATH = os.path.join(CUR_DIR, 'src', 'native-messaging-host', 'riot_app_market.py')
+HOST_MANIFEST_PATH = os.path.join(CUR_DIR, 'src', 'native-messaging-host', 'de.fu_berlin.mi.riot_app_market.json')
 
-CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+import utility.common as common
+from utility.browser import BrowserNotSupportedException
 
 
 def main(argv):
@@ -59,15 +59,14 @@ def install_manifest_file(target_dir, browser):
 
     # copy native messaging host manifest
     json_manifest_name = '%s.json' % common.HOST_NAME
-    source_manifest = os.path.join(CUR_DIR, json_manifest_name)
+    source_manifest = HOST_MANIFEST_PATH
     target_manifest = os.path.join(target_dir, json_manifest_name)
     copyfile(source_manifest, target_manifest)
 
     target_file = os.path.join(target_dir, json_manifest_name)
 
     # replace HOST_PATH placeholder in the manifest
-    host_path = '%s/riot_app_market.py' % os.path.normpath(os.path.join(CUR_DIR, os.pardir))
-    replace_host_path(target_file, host_path)
+    replace_host_path(target_file, HOST_PATH)
 
     # replace ALLOWED_ATTRIBUTE placeholder in the manifest
     firefox_chrome_compatibility_switch(target_file, browser)

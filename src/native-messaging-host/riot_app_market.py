@@ -22,11 +22,12 @@ import time
 from shutil import rmtree
 from subprocess import Popen
 
+import errno
+
 import config
-import common
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-
+LOGFILE = os.path.join(CUR_DIR, 'log' , 'riot_app_market_log.txt')
 
 def main():
 
@@ -140,9 +141,33 @@ def read_message_from_stdin():
     return text
 
 
+def create_directories(path):
+    """
+    Creates all directories on path
+
+    Parameters
+    ----------
+    path: string
+        Path to create
+
+    Raises
+    -------
+    OSError
+        Something fails creating directories, except directoy already exist
+
+    """
+    try:
+        os.makedirs(path)
+
+    except OSError as e:
+
+        if e.errno != errno.EEXIST:
+            raise
+
+
 if __name__ == '__main__':
 
-    logging.basicConfig(filename='log/riot_app_market_log.txt', format=config.LOGGING_FORMAT, datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+    logging.basicConfig(filename=LOGFILE, format=config.LOGGING_FORMAT, datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
     try:
         main()
