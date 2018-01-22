@@ -18,8 +18,8 @@ import sys
 from os.path import expanduser
 from shutil import copyfile
 
-from utility.common import HOST_NAME, get_browser, get_target_dirs, create_directories, get_allowed_attribute
-from utility.browser import BrowserNotSupportedException
+from utility.common import HOST_NAME, get_target_dirs, create_directories, get_allowed_attribute
+from utility.browser import BrowserNotSupportedException, get_browser
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 

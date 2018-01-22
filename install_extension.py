@@ -16,8 +16,8 @@ import os
 import subprocess
 import sys
 
-from utility.common import EXTENSION_VERSION, get_browser
-from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
+from utility.common import EXTENSION_VERSION
+from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException, get_browser
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 EXTENSION_XPI_PATH = os.path.join(CUR_DIR, 'dist', 'extension', 'firefox', 'rapstore-%s.xpi' % EXTENSION_VERSION)

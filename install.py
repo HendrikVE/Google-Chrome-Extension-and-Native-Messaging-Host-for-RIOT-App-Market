@@ -15,10 +15,9 @@ import argparse
 import sys
 import os
 
-import utility.common as common
 import install_extension as install_extension
 import install_host as install_host
-from utility.browser import BrowserNotSupportedException
+from utility.browser import BrowserNotSupportedException, get_browser
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -35,7 +34,7 @@ def main(argv):
         return
 
     try:
-        browser = common.get_browser(args.browser)
+        browser = get_browser(args.browser)
 
     except BrowserNotSupportedException as e:
         print(str(e))

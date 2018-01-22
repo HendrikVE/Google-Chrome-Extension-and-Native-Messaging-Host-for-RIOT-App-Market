@@ -17,7 +17,7 @@ import subprocess
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
-from .browser import Chrome, Chromium, Firefox, BrowserNotSupportedException
+from .browser import BrowserNotSupportedException
 
 HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
 
@@ -25,20 +25,6 @@ FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'
 CHROME_EXTENSION_ID = 'omfbdeblphficlecofpbkdcchnghnkhc'
 
 EXTENSION_VERSION = '1.0.6'
-
-
-def get_browser(browser_name):
-
-    if browser_name == 'chrome':
-        return Chrome()
-
-    elif browser_name == 'chromium':
-        return Chromium()
-
-    elif browser_name == 'firefox':
-        return Firefox()
-
-    raise BrowserNotSupportedException(browser_name)
 
 
 def get_target_dirs(home_dir, browser):

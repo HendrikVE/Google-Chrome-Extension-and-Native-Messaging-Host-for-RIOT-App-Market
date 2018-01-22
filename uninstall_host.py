@@ -16,8 +16,8 @@ import os
 import sys
 from os.path import expanduser
 
-from utility.common import HOST_NAME, get_browser, get_target_dirs
-from utility.browser import BrowserNotSupportedException
+from utility.common import HOST_NAME, get_target_dirs
+from utility.browser import BrowserNotSupportedException, get_browser
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 

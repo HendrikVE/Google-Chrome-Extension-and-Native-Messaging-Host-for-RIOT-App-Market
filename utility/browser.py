@@ -107,3 +107,17 @@ class BrowserNotSupportedException(Exception):
 
     def __init__(self, browser_name):
         super(BrowserNotSupportedException, self).__init__('%s is not supported' % browser_name)
+
+
+def get_browser(browser_name):
+
+    if browser_name == 'chrome':
+        return Chrome()
+
+    elif browser_name == 'chromium':
+        return Chromium()
+
+    elif browser_name == 'firefox':
+        return Firefox()
+
+    raise BrowserNotSupportedException(browser_name)
