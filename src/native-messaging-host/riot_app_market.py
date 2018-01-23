@@ -12,20 +12,20 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import base64
+import errno
 import json
 import logging
 import os
-import struct
-import sys
 import tarfile
 import time
-from shutil import rmtree
-from subprocess import Popen
-import errno
+from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
-from Crypto.Hash import SHA256
 from base64 import b64decode
+from shutil import rmtree
+from subprocess import Popen
+
+from util import io
 
 import config
 
@@ -34,23 +34,20 @@ LOGFILE = os.path.join(CUR_DIR, 'log', 'riot_app_market_log.txt')
 PUBLIC_KEY_FILE = os.path.join(CUR_DIR, 'website.pub')
 
 
-def main():
+def test_connection_native_messaging_host(message):
 
-    message = read_message_from_stdin()
-    message_from_extension = json.loads(message)
+    # print repsonse for callback within background script
+    response = {'success': True}
+    io.write_message_to_stdout(response)
 
-    # just testing connectivity
-    if message_from_extension['action'] == 'test_connection_native_messaging_host':
-        # print repsonse for callback within background script
-        response = {'success': True}
-        write_message_to_stdout(response)
 
-        return
+def start_flash_process(message):
 
     # unwrap message from extension
-    message_from_website = message_from_extension['message']
+    message_from_website = message['message']
 
-    verified = verify_message(PUBLIC_KEY_FILE, message_from_website['message'], b64decode(message_from_website['signature']))
+    verified = verify_message(PUBLIC_KEY_FILE, message_from_website['message'],
+                              b64decode(message_from_website['signature']))
 
     if not verified:
         # maybe unauthorized access via extension, so ignore
@@ -91,7 +88,8 @@ def main():
 
         logging.debug(file_to_look_at)
 
-        inner_command = './flash {0} {1} && touch {2}'.format(board, path_to_makefile, file_to_look_at.replace(' ', '\ '))
+        inner_command = './flash {0} {1} && touch {2}'.format(board, path_to_makefile,
+                                                              file_to_look_at.replace(' ', '\ '))
         Popen(['x-terminal-emulator', '-e', 'bash -c "{}"'.format(inner_command)])
 
         while not os.path.exists(file_to_look_at):
@@ -104,6 +102,22 @@ def main():
         logging.error(str(e), exc_info=True)
 
 
+def main():
+
+    action_dict = {
+        'test_connection_native_messaging_host': test_connection_native_messaging_host,
+        'install_image': start_flash_process,
+    }
+
+    message = io.read_message_from_stdin()
+    message_from_extension = json.loads(message)
+
+    action = message_from_extension['action']
+
+    method_for_action = action_dict[action]
+    method_for_action(message_from_extension)
+
+
 def verify_message(public_key, message, signature):
 
     pub_key = open(public_key, 'r').read()
@@ -113,54 +127,6 @@ def verify_message(public_key, message, signature):
     digest.update(message)
 
     return signer.verify(digest, signature)
-
-
-def write_message_to_stdout(message):
-    """
-    Write message to stdout for extension, which called the native messaging host.
-    Parameter 'message' is converted to a json string.
-    WARNING: without using ports, only the first message works, further messages will be ignored
-
-    Parameters
-    ----------
-    message: array_like
-        Message to be sent, in form of a dictionary
-
-    """
-    json_message = json.dumps(message).encode('utf-8')
-
-    # pack message length as 4 byte integer.
-    message_length = struct.pack('i', len(json_message))
-
-    # send the data
-    sys.stdout.write(message_length)
-    sys.stdout.write(json_message)
-    sys.stdout.flush()
-
-
-# https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/nativeMessaging/host/native-messaging-example-host
-def read_message_from_stdin():
-    """
-    Read message from stdin sent by chrome extension
-
-    Returns
-    -------
-    string
-        Input text in form of a JSON string
-    """
-
-    # read the message length (first 4 bytes)
-    message_length_bytes = sys.stdin.read(4)
-    if len(message_length_bytes) == 0:
-        sys.exit(0)
-
-    # unpack message length as 4 byte integer
-    message_length = struct.unpack('i', message_length_bytes)[0]
-
-    # read the data (JSON object) of the message
-    text = sys.stdin.read(message_length).decode('utf-8')
-
-    return text
 
 
 def create_directories(path):

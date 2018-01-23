@@ -8,7 +8,7 @@
 
 window.addEventListener("message", function(event) {
 
-    if (event.source == window && event.data && event.data.action == "rapstore") {
+    if (event.source == window && event.data && event.data.action == "install_image") {
         // notify background script
         chrome.runtime.sendMessage(event.data);
     }
