@@ -12,14 +12,14 @@
 ## Install
 
 ### Complete (extension and native messaging host)
-1. run **sudo install.py <your_browser>**
+1. run **install.py <your_browser>**
 2. for further information look at the instructions below
 
 ### Install the extension
 
 #### Google Chrome and Chromium
 1. open a terminal
-2. run **sudo python install_extension.py <your_browser>**
+2. run **python install_extension.py <your_browser>**
 3. you need to restart chrome/ chromium
 4. extension should be installed now
 

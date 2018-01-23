@@ -21,43 +21,54 @@ import tarfile
 import time
 from shutil import rmtree
 from subprocess import Popen
-
 import errno
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA256
+from base64 import b64decode
 
 import config
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-LOGFILE = os.path.join(CUR_DIR, 'log' , 'riot_app_market_log.txt')
+LOGFILE = os.path.join(CUR_DIR, 'log', 'riot_app_market_log.txt')
+PUBLIC_KEY_FILE = os.path.join(CUR_DIR, 'website.pub')
+
 
 def main():
 
     message = read_message_from_stdin()
-    json_message = json.loads(message)
+    message_from_extension = json.loads(message)
 
-    try:
-        # just testing connectivity
-        if json_message['action'] == 'test_connection_native_messaging_host':
+    # just testing connectivity
+    if message_from_extension['action'] == 'test_connection_native_messaging_host':
+        # print repsonse for callback within background script
+        response = {'success': True}
+        write_message_to_stdout(response)
 
-            # print repsonse for callback within background script
-            response = {'success': True}
-            write_message_to_stdout(response)
+        return
 
-            return
+    # unwrap message from extension
+    message_from_website = message_from_extension['message']
 
-    except Exception as e:
-        logging.error(str(e), exc_info=True)
+    verified = verify_message(PUBLIC_KEY_FILE, message_from_website['message'], b64decode(message_from_website['signature']))
 
-    json_message = json_message['message']
+    if not verified:
+        # maybe unauthorized access via extension, so ignore
+        logging.debug('unauthorized access denied')
+        return
 
-    output_archive_content = base64.b64decode(json_message['output_archive'])
-    output_archive_extension = json_message['output_archive_extension']
+    # unwrap message from website
+    message_from_backend = json.loads(message_from_website['message'])
 
-    board = json_message['board']
-    application_name = json_message['application_name']
+    output_archive_content = base64.b64decode(message_from_backend['output_archive'])
+    output_archive_extension = message_from_backend['output_archive_extension']
+
+    board = message_from_backend['board']
+    application_name = message_from_backend['application_name']
 
     try:
         temporary_directory = os.path.join('tmp', application_name)
-        common.create_directories(temporary_directory)
+        create_directories(temporary_directory)
 
         archive_file_path = os.path.join(temporary_directory, application_name + '.' + output_archive_extension)
 
@@ -65,7 +76,7 @@ def main():
             archive.write(output_archive_content)
 
         dest_path = os.path.join(temporary_directory, application_name)
-        common.create_directories(dest_path)
+        create_directories(dest_path)
 
         tar = tarfile.open(archive_file_path, 'r:gz')
         for tarinfo in tar:
@@ -91,6 +102,17 @@ def main():
 
     except Exception as e:
         logging.error(str(e), exc_info=True)
+
+
+def verify_message(public_key, message, signature):
+
+    pub_key = open(public_key, 'r').read()
+    rsakey = RSA.importKey(pub_key)
+    signer = PKCS1_v1_5.new(rsakey)
+    digest = SHA256.new()
+    digest.update(message)
+
+    return signer.verify(digest, signature)
 
 
 def write_message_to_stdout(message):
