@@ -86,7 +86,7 @@ def main():
 
         path_to_makefile = os.path.join(dest_path, 'generated_by_riotam', application_name)
 
-        #open standard terminal and execute shell script 'flash'
+        # open standard terminal and execute shell script 'flash'
         file_to_look_at = os.path.join(CUR_DIR, '.terminal_finished_for_' + application_name)
 
         logging.debug(file_to_look_at)

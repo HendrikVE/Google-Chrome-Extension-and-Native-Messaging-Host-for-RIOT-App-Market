@@ -16,7 +16,7 @@ import os
 import subprocess
 import sys
 
-from utility.common import EXTENSION_VERSION
+from utility.common import EXTENSION_VERSION, is_root_user
 from utility.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException, get_browser
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -48,11 +48,15 @@ def main(argv):
 def install_extension(browser):
 
     if isinstance(browser, Firefox):
-        origin_user = subprocess.check_output(['logname']).strip()
 
-        # can't run firefox as root to install, because of problems
-        output = subprocess.check_output(['sudo', '-u', origin_user, 'firefox', EXTENSION_XPI_PATH],
-                                         stderr=subprocess.STDOUT)
+        if is_root_user():
+            origin_user = subprocess.check_output(['logname']).strip()
+            # can't run firefox as root to install, because of problems
+            output = subprocess.check_output(['sudo', '-u', origin_user, 'firefox', EXTENSION_XPI_PATH],
+                                             stderr=subprocess.STDOUT)
+        else:
+            output = subprocess.check_output(['firefox', EXTENSION_XPI_PATH], stderr=subprocess.STDOUT)
+
         print(output)
 
     elif isinstance(browser, Chrome):
