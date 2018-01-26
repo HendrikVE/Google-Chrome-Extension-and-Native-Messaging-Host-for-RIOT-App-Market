@@ -12,7 +12,7 @@
 ## Install
 
 ### Complete (extension and native messaging host)
-1. run **install.py <your_browser>**
+1. run **python install.py <your_browser>**
 2. for further information look at the instructions below
 
 ### Install the extension
