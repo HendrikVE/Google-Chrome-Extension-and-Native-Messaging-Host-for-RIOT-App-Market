@@ -6,7 +6,7 @@
         }
     },
     "name": "RAPstore",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "manifest_version": 2,
     "description": "Download your custom RIOT OS, enriched with applications you choose.",
 

@@ -56,7 +56,6 @@ def install_extension(browser):
         print('installed for chromium')
         print('NOTICE: You need to restart your browser!')
 
-
     else:
         raise BrowserNotSupportedException(browser.get_name())
 
@@ -75,6 +74,7 @@ def uninstall_extension(browser):
 
         if not os.path.isfile(file_to_delete):
             print('File not found, it seems like the extension is currently not installed')
+            print()
             return
 
         output = subprocess.check_output(['sudo', 'rm', file_to_delete],
