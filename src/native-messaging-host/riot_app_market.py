@@ -112,10 +112,14 @@ def main():
     message = io.read_message_from_stdin()
     message_from_extension = json.loads(message)
 
-    action = message_from_extension['action']
+    action_key = message_from_extension['action']
+    function_for_action = action_dict.get(action_key)
 
-    method_for_action = action_dict[action]
-    method_for_action(message_from_extension)
+    if function_for_action is None:
+        logging.error('missing field "action"')
+
+    else:
+        function_for_action(message_from_extension)
 
 
 def verify_message(public_key, message, signature):
