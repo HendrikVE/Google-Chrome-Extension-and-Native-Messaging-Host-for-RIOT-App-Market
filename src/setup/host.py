@@ -33,6 +33,8 @@ def install_host(browser):
     for dir in target_dirs:
         _install_manifest_file(dir, browser)
 
+    print()
+
 
 def uninstall_host(browser):
 
@@ -41,6 +43,8 @@ def uninstall_host(browser):
 
     for dir in target_dirs:
         _uninstall_manifest(dir, browser)
+
+    print()
 
 
 def _install_manifest_file(target_dir, browser):
@@ -67,8 +71,7 @@ def _install_manifest_file(target_dir, browser):
     st = os.stat(json_manifest)
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
-    print('Native messaging host {0} has been installed for {1} in {2}'.format(HOST_NAME, browser.get_name(), target_dir))
-    print()
+    print('installed host {0} for {1} at {2}'.format(HOST_NAME, browser.get_name(), target_dir))
 
 
 def _replace_host_path(path, host_path):
@@ -106,12 +109,13 @@ def _firefox_chrome_compatibility_switch(path, browser):
 
 def _uninstall_manifest(target_dir, browser):
 
+    file_to_delete = '{0}/{1}.json'.format(target_dir, HOST_NAME)
+
     try:
-        os.remove('{0}/{1}.json'.format(target_dir, HOST_NAME))
+        os.remove(file_to_delete)
 
     except OSError:
-        # we are not interested in missing files when removing anyway
-        pass
+        print('host is currently not installed for {0} at {1}'.format(browser.get_name(), target_dir))
+        return
 
-    print('Native messaging host {0} at {1} has been removed from {2}\n'.format(HOST_NAME, target_dir, browser.get_name()))
-    print()
+    print('removed host {0} at {1} from {2}'.format(HOST_NAME, target_dir, browser.get_name()))

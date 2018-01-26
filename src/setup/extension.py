@@ -47,13 +47,13 @@ def install_extension(browser):
     elif isinstance(browser, Chrome):
 
         _install_chrome_based(INSTALL_PATH_CHROME, EXTENSION_CRX_PATH)
-        print('installed for chrome')
+        print('installed extension for chrome')
         print('NOTICE: You need to restart your browser!')
 
     elif isinstance(browser, Chromium):
 
         _install_chrome_based(INSTALL_PATH_CHROMIUM, EXTENSION_CRX_PATH)
-        print('installed for chromium')
+        print('installed extension for chromium')
         print('NOTICE: You need to restart your browser!')
 
     else:
@@ -66,21 +66,21 @@ def uninstall_extension(browser):
 
     if isinstance(browser, Firefox):
 
-        print('please remove the extension manually')
+        print('NOTICE: please remove the extension manually')
 
     elif isinstance(browser, Chrome):
 
         file_to_delete = os.path.join(INSTALL_PATH_CHROME, CHROME_INSTALL_FILE_NAME)
 
         if not os.path.isfile(file_to_delete):
-            print('File not found, it seems like the extension is currently not installed')
+            print('extension is currently not installed for %s' % browser.get_name())
             print()
             return
 
         output = subprocess.check_output(['sudo', 'rm', file_to_delete],
                                          stderr=subprocess.STDOUT, cwd=CUR_DIR)
         print(output)
-        print('removed from chrome')
+        print('removed extension from chrome')
         print('NOTICE: You need to restart your browser!')
 
     elif isinstance(browser, Chromium):
@@ -88,14 +88,14 @@ def uninstall_extension(browser):
         file_to_delete = os.path.join(INSTALL_PATH_CHROMIUM, CHROME_INSTALL_FILE_NAME)
 
         if not os.path.isfile(file_to_delete):
-            print('File not found, it seems like the extension is currently not installed')
+            print('extension is currently not installed for %s' % browser.get_name())
             print()
             return
 
         output = subprocess.check_output(['sudo', 'rm', file_to_delete],
                                          stderr=subprocess.STDOUT, cwd=CUR_DIR)
         print(output)
-        print('removed from chromium')
+        print('removed extension from chromium')
         print('NOTICE: You need to restart your browser!')
 
     else:
