@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """
- * Copyright (C) 2017 Hendrik van Essen
+ * Copyright (C) 2018 Hendrik van Essen and FU Berlin
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -11,48 +11,39 @@
 
 from __future__ import absolute_import, print_function, unicode_literals
 
-import argparse
 import os
-import stat
-import sys
 from os.path import expanduser
+import stat
 from shutil import copyfile
 
-from utility.common import HOST_NAME, get_target_dirs, create_directories, get_allowed_attribute
-from utility.browser import BrowserNotSupportedException, get_browser
+from .util.common import HOST_NAME, get_target_dirs, create_directories, get_allowed_attribute
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT_DIR = os.path.normpath(os.path.join(CUR_DIR, os.pardir, os.pardir))
 
-HOST_PATH = os.path.join(CUR_DIR, 'src', 'native-messaging-host', 'riot_app_market.py')
-HOST_MANIFEST_PATH = os.path.join(CUR_DIR, 'src', 'native-messaging-host', 'de.fu_berlin.mi.riot_app_market.json')
+HOST_PATH = os.path.join(PROJECT_ROOT_DIR, 'src', 'native-messaging-host', 'riot_app_market.py')
+HOST_MANIFEST_PATH = os.path.join(PROJECT_ROOT_DIR, 'src', 'native-messaging-host', 'de.fu_berlin.mi.riot_app_market.json')
 
 
-def main(argv):
-
-    parser = init_argparse()
-
-    try:
-        args = parser.parse_args(argv)
-
-    except Exception as e:
-        print (str(e))
-        return
-
-    try:
-        browser = get_browser(args.browser)
-
-    except BrowserNotSupportedException as e:
-        print(str(e))
-        return
+def install_host(browser):
 
     home_dir = expanduser('~')
     target_dirs = get_target_dirs(home_dir, browser)
 
     for dir in target_dirs:
-        install_manifest_file(dir, browser)
+        _install_manifest_file(dir, browser)
 
 
-def install_manifest_file(target_dir, browser):
+def uninstall_host(browser):
+
+    home_dir = expanduser('~')
+    target_dirs = get_target_dirs(home_dir, browser)
+
+    for dir in target_dirs:
+        _uninstall_manifest(dir, browser)
+
+
+def _install_manifest_file(target_dir, browser):
 
     # create directory to store native messaging host
     create_directories(target_dir)
@@ -66,10 +57,10 @@ def install_manifest_file(target_dir, browser):
     target_file = os.path.join(target_dir, json_manifest_name)
 
     # replace HOST_PATH placeholder in the manifest
-    replace_host_path(target_file, HOST_PATH)
+    _replace_host_path(target_file, HOST_PATH)
 
     # replace ALLOWED_ATTRIBUTE placeholder in the manifest
-    firefox_chrome_compatibility_switch(target_file, browser)
+    _firefox_chrome_compatibility_switch(target_file, browser)
 
     # set permissions for the manifest so that all users can read it
     json_manifest = '{0}/{1}'.format(target_dir, json_manifest_name)
@@ -77,21 +68,10 @@ def install_manifest_file(target_dir, browser):
     os.chmod(json_manifest, st.st_mode | stat.S_IROTH)
 
     print('Native messaging host {0} has been installed for {1} in {2}'.format(HOST_NAME, browser.get_name(), target_dir))
+    print()
 
 
-def init_argparse():
-
-    parser = argparse.ArgumentParser(description='Build RIOT OS')
-
-    parser.add_argument('browser',
-                        action='store',
-                        choices=['chrome', 'chromium', 'firefox'],
-                        help='the browser to install the host for')
-
-    return parser
-
-
-def replace_host_path(path, host_path):
+def _replace_host_path(path, host_path):
 
     copyfile(path, path + '.old')
 
@@ -107,7 +87,7 @@ def replace_host_path(path, host_path):
     os.remove(path + '.old')
 
 
-def firefox_chrome_compatibility_switch(path, browser):
+def _firefox_chrome_compatibility_switch(path, browser):
 
     copyfile(path, path + '.old')
 
@@ -124,10 +104,14 @@ def firefox_chrome_compatibility_switch(path, browser):
     os.remove(path + '.old')
 
 
-if __name__ == '__main__':
+def _uninstall_manifest(target_dir, browser):
 
-    if ' ' in CUR_DIR:
-        print('this repository needs to be cloned to a path without spaces before installing the native messaging host!')
+    try:
+        os.remove('{0}/{1}.json'.format(target_dir, HOST_NAME))
 
-    else:
-        main(sys.argv[1:])
+    except OSError:
+        # we are not interested in missing files when removing anyway
+        pass
+
+    print('Native messaging host {0} at {1} has been removed from {2}\n'.format(HOST_NAME, target_dir, browser.get_name()))
+    print()

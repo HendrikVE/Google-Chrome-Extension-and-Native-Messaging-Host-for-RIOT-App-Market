@@ -15,9 +15,9 @@ import argparse
 import sys
 import os
 
-import install_extension as install_extension
-import install_host as install_host
-from utility.browser import BrowserNotSupportedException, get_browser
+from setup.util.browser import get_browser, BrowserNotSupportedException
+from setup.extension import install_extension, uninstall_extension
+from setup.host import install_host, uninstall_host
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -40,11 +40,27 @@ def main(argv):
         print(str(e))
         return
 
-    print('installing extension')
-    install_extension.main(argv)
+    if args.remove:
+        if args.component == 'extension':
+            uninstall_extension(browser)
 
-    print('installing native messaging host')
-    install_host.main(argv)
+        elif args.component == 'host':
+            uninstall_host(browser)
+
+        else:
+            uninstall_extension(browser)
+            uninstall_host(browser)
+
+    else:
+        if args.component == 'extension':
+            install_extension(browser)
+
+        elif args.component == 'host':
+            install_host(browser)
+
+        else:
+            install_extension(browser)
+            install_host(browser)
 
     print('done')
 
@@ -56,7 +72,17 @@ def init_argparse():
     parser.add_argument('browser',
                         action='store',
                         choices=['chrome', 'chromium', 'firefox'],
-                        help='the browser to install the host for')
+                        help='the browser to install the integration for')
+
+    parser.add_argument('--remove',
+                        action='store_true',
+                        help='remove installed components')
+
+    parser.add_argument('--component',
+                        action='store',
+                        choices=['host', 'extension', 'all'],
+                        default='all',
+                        help='which part of the integration should be installed (all on default)')
 
     return parser
 

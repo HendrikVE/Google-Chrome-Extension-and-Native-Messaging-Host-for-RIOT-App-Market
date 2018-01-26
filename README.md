@@ -19,19 +19,19 @@
 
 #### Google Chrome and Chromium
 1. open a terminal
-2. run **python install_extension.py <your_browser>**
+2. run **python install.py --component extension <your_browser>**
 3. you need to restart chrome/ chromium
 4. extension should be installed now
 
 #### Firefox
 1. open a terminal
-2. run **python install_extension.py firefox**
+2. run **python install.py --component extension firefox**
 3. Firefox will open and ask for a confirmation
 4. click on **Add**
 
 ### Install the Native Messaging Host
 1. open a terminal
-2. run **python install_host.py <your_browser>**
+2. run **python install.py --component host <your_browser>**
 
 ## More Information
 Please ignore upcoming warnings, they are caused by a shared codebase for firefox and chrome
