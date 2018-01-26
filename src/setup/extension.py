@@ -42,7 +42,8 @@ def install_extension(browser):
         else:
             output = subprocess.check_output(['firefox', EXTENSION_XPI_PATH], stderr=subprocess.STDOUT)
 
-        print(output)
+        if len(output.strip()) > 0:
+            print(output)
 
     elif isinstance(browser, Chrome):
 
@@ -79,7 +80,9 @@ def uninstall_extension(browser):
 
         output = subprocess.check_output(['sudo', 'rm', file_to_delete],
                                          stderr=subprocess.STDOUT, cwd=CUR_DIR)
-        print(output)
+        if len(output.strip()) > 0:
+            print(output)
+
         print('removed extension from chrome')
         print('NOTICE: You need to restart your browser!')
 
@@ -94,7 +97,9 @@ def uninstall_extension(browser):
 
         output = subprocess.check_output(['sudo', 'rm', file_to_delete],
                                          stderr=subprocess.STDOUT, cwd=CUR_DIR)
-        print(output)
+        if len(output.strip()) > 0:
+            print(output)
+
         print('removed extension from chromium')
         print('NOTICE: You need to restart your browser!')
 
