@@ -24,8 +24,6 @@ HOST_NAME = 'de.fu_berlin.mi.riot_app_market'
 FIREFOX_EXTENSION_ID = 'rapstore.extension@fu-berlin.de'
 CHROME_EXTENSION_ID = 'omfbdeblphficlecofpbkdcchnghnkhc'
 
-EXTENSION_VERSION = '1.0.7'
-
 
 def get_target_dirs(home_dir, browser):
     """

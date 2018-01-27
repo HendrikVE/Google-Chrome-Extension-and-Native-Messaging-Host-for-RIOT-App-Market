@@ -16,7 +16,7 @@ import sys
 import os
 
 from setup.util.browser import get_browser, BrowserNotSupportedException
-from setup.extension import install_extension, uninstall_extension
+from setup.extension import install_extension, uninstall_extension, get_extension_version
 from setup.host import install_host, uninstall_host
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -52,14 +52,16 @@ def main(argv):
             uninstall_host(browser)
 
     else:
+        version = get_extension_version()
+
         if args.component == 'extension':
-            install_extension(browser)
+            install_extension(browser, version)
 
         elif args.component == 'host':
             install_host(browser)
 
         else:
-            install_extension(browser)
+            install_extension(browser, version)
             install_host(browser)
 
     print('done')

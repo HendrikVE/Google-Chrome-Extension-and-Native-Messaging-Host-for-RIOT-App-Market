@@ -16,13 +16,10 @@ import os
 import subprocess
 
 from .util.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
-from .util.common import EXTENSION_VERSION, CHROME_EXTENSION_ID, is_root_user
+from .util.common import CHROME_EXTENSION_ID, is_root_user
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 PROJECT_ROOT_DIR = os.path.normpath(os.path.join(CUR_DIR, os.pardir, os.pardir))
-
-EXTENSION_XPI_PATH = os.path.join(PROJECT_ROOT_DIR, 'dist', 'extension', 'firefox', 'rapstore-%s.xpi' % EXTENSION_VERSION)
-EXTENSION_CRX_PATH = os.path.join(PROJECT_ROOT_DIR, 'dist', 'extension', 'chrome', 'rapstore-%s.crx' % EXTENSION_VERSION)
 
 INSTALL_PATH_CHROME = '/usr/share/google-chrome/extensions/'
 INSTALL_PATH_CHROMIUM = '/usr/share/chromium-browser/extensions/'
@@ -30,30 +27,33 @@ INSTALL_PATH_CHROMIUM = '/usr/share/chromium-browser/extensions/'
 CHROME_INSTALL_FILE_NAME = CHROME_EXTENSION_ID + '.json'
 
 
-def install_extension(browser):
+def install_extension(browser, version):
+
+    extension_xpi_path = os.path.join(PROJECT_ROOT_DIR, 'dist', 'extension', 'firefox', 'rapstore-%s.xpi' % version)
+    extension_crx_path = os.path.join(PROJECT_ROOT_DIR, 'dist', 'extension', 'chrome', 'rapstore-%s.crx' % version)
 
     if isinstance(browser, Firefox):
 
         if is_root_user():
             origin_user = subprocess.check_output(['logname']).strip()
             # can't run firefox as root to install, because of problems
-            output = subprocess.check_output(['sudo', '-u', origin_user, 'firefox', EXTENSION_XPI_PATH],
+            output = subprocess.check_output(['sudo', '-u', origin_user, 'firefox', extension_xpi_path],
                                              stderr=subprocess.STDOUT)
         else:
-            output = subprocess.check_output(['firefox', EXTENSION_XPI_PATH], stderr=subprocess.STDOUT)
+            output = subprocess.check_output(['firefox', extension_xpi_path], stderr=subprocess.STDOUT)
 
         if len(output.strip()) > 0:
             print(output)
 
     elif isinstance(browser, Chrome):
 
-        _install_chrome_based(INSTALL_PATH_CHROME, EXTENSION_CRX_PATH)
+        _install_chrome_based(INSTALL_PATH_CHROME, extension_crx_path, version)
         print('installed extension for chrome')
         print('NOTICE: You need to restart your browser!')
 
     elif isinstance(browser, Chromium):
 
-        _install_chrome_based(INSTALL_PATH_CHROMIUM, EXTENSION_CRX_PATH)
+        _install_chrome_based(INSTALL_PATH_CHROMIUM, extension_crx_path, version)
         print('installed extension for chromium')
         print('NOTICE: You need to restart your browser!')
 
@@ -109,11 +109,26 @@ def uninstall_extension(browser):
     print()
 
 
-def _install_chrome_based(dest_path, extension_crx_path):
+def get_extension_version():
+
+    extension_manifest_path = os.path.join(PROJECT_ROOT_DIR, 'src', 'extension', 'manifest.json')
+
+    with open(extension_manifest_path, 'r') as manifest_file:
+
+        for line in manifest_file:
+
+            if '"version"' in line:
+                line = line.split('"')
+                return line[3]
+
+    return None
+
+
+def _install_chrome_based(dest_path, extension_crx_path, version):
 
     json_file_content = {
         'external_crx': os.path.abspath(extension_crx_path),
-        'external_version': EXTENSION_VERSION,
+        'external_version': version,
     }
 
     tmp_file_path = os.path.join(CUR_DIR, CHROME_INSTALL_FILE_NAME)
