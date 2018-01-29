@@ -29,7 +29,7 @@ function addPayloadToWebsite() {
     document.body.classList.add("rapstore_extension_installed");
 
     // test connection to native messaging host through background script
-    var connectionTestRequest = {action: "test_connection_native_messaging_host", message: ""}
+    var connectionTestRequest = {action: "rapstore_test_connection_native_messaging_host", message: ""}
 
     chrome.runtime.sendMessage(connectionTestRequest, function(response) {
 

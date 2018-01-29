@@ -16,13 +16,14 @@ from os.path import expanduser
 import stat
 from shutil import copyfile
 
-from .util.common import HOST_NAME, get_target_dirs, create_directories, get_allowed_attribute
+from .util.common import get_target_dirs, create_directories, get_allowed_attribute
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 PROJECT_ROOT_DIR = os.path.normpath(os.path.join(CUR_DIR, os.pardir, os.pardir))
 
-HOST_PATH = os.path.join(PROJECT_ROOT_DIR, 'src', 'native-messaging-host', 'riot_app_market.py')
-HOST_MANIFEST_PATH = os.path.join(PROJECT_ROOT_DIR, 'src', 'native-messaging-host', 'de.fu_berlin.mi.riot_app_market.json')
+HOST_PATH = os.path.join(PROJECT_ROOT_DIR, 'src', 'native-messaging-host', 'rapstore_nmh.py')
+HOST_MANIFEST_PATH = os.path.join(PROJECT_ROOT_DIR, 'src', 'native-messaging-host', 'net.riot_apps.rapstore_nmh.json')
+HOST_NAME = 'net.riot_apps.rapstore_nmh'
 
 
 def install_host(browser):

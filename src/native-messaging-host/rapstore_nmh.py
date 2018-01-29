@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 """
- * Copyright (C) 2017 Hendrik van Essen and FU Berlin
+ * Copyright (C) 2018 Hendrik van Essen and FU Berlin
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -30,7 +30,7 @@ from util import io
 import config
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
-LOGFILE = os.path.join(CUR_DIR, 'log', 'riot_app_market_log.txt')
+LOGFILE = os.path.join(CUR_DIR, 'log', 'rapstore_nmh_log.txt')
 PUBLIC_KEY_FILE = os.path.join(CUR_DIR, 'website.pub')
 
 
@@ -105,8 +105,8 @@ def start_flash_process(message):
 def main():
 
     action_dict = {
-        'test_connection_native_messaging_host': test_connection_native_messaging_host,
-        'install_image': start_flash_process,
+        'rapstore_test_connection_native_messaging_host': test_connection_native_messaging_host,
+        'rapstore_install_image': start_flash_process,
     }
 
     message = io.read_message_from_stdin()

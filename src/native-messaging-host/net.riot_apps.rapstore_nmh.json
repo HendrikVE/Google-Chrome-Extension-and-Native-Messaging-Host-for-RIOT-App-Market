@@ -1,5 +1,5 @@
 {
-    "name": "de.fu_berlin.mi.riot_app_market",
+    "name": "net.riot_apps.rapstore_nmh",
     "description": "RIOT OS App Market",
     "path": "HOST_PATH",
     "type": "stdio",

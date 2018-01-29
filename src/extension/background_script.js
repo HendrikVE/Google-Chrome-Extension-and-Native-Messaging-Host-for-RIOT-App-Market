@@ -6,7 +6,7 @@
  * directory for more details.
 */
 
-var nativeMessagingHostName = "de.fu_berlin.mi.riot_app_market";
+var nativeMessagingHostName = "net.riot_apps.rapstore_nmh";
 
 chrome.runtime.onMessage.addListener(listener);
 

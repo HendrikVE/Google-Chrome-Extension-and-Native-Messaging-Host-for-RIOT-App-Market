@@ -2,11 +2,11 @@
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+iN0lm7+SicPKrVIFY0vtNgMgW/1CBrTcqw5hxnL2ewGgQwpytezEowoASHLCF4hbjU/7RAuUETf+c7CjhvQABUUV+WOBzr3tf39B9fNiiNYt4fX9vlP+nRmLpME7GJa5XnzRYrYiavZis4NfkAfAyqB18iAdrPCXRc6XjQlBZBzBzZFCnH0aLjtjj8sWHK+soh2enVXkNXtIyURFLwiRzNe3PqVmNZWqlrnPwtHezjrRSBL58c+fchlf/d2K1ktTE8sLdk3lpP6UnJ4BZZpHYrlbVwB6KpgvSDC+Ubrqwr/9BiYgb4qcA2cprjD2Yb6QJF3UBaaoAIgHM9aczdLtQIDAQAB",
     "applications": {
         "gecko": {
-            "id": "rapstore.extension@fu-berlin.de"
+            "id": "rapstore.extension@riot-apps.net"
         }
     },
     "name": "RAPstore",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "manifest_version": 2,
     "description": "Download your custom RIOT OS, enriched with applications you choose.",
 
