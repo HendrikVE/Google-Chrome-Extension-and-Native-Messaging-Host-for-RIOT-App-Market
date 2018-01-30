@@ -3,7 +3,7 @@
 ## Requirements
 1. **sudo apt-get install git python make openocd**
 2. navigate with a terminal in to the directory where you want the extension to be stored at \*, then run:
-   <br>**git clone https://github.com/riot-appstore/riotam-browser-integration**
+   <br>**git clone https://github.com/riot-appstore/rapstore-browser-integration**
 
 **IMPORTANT:** Don't remove this directory while using the extension, otherwise it won't work anymore
 
