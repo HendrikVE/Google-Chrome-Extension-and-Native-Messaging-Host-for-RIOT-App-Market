@@ -19,7 +19,7 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
 from .browser import BrowserNotSupportedException
 
-FIREFOX_EXTENSION_ID = 'rapstore.extension@riot-apps.net'
+FIREFOX_EXTENSION_ID = 'rapstore.browser-integration@riot-apps.net'
 CHROME_EXTENSION_ID = 'omfbdeblphficlecofpbkdcchnghnkhc'
 
 
