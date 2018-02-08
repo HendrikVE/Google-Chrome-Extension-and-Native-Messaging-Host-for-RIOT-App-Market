@@ -5,7 +5,7 @@
             "id": "rapstore.browser-integration@riot-apps.net"
         }
     },
-    "name": "RAPstore",
+    "name": "RAPstore Extension",
     "version": "1.0.8",
     "manifest_version": 2,
     "description": "Browser integration for the RAPstore",
