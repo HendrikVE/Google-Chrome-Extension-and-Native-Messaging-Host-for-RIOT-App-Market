@@ -20,7 +20,7 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 from .browser import BrowserNotSupportedException
 
 FIREFOX_EXTENSION_ID = 'rapstore.browser-integration@riot-apps.net'
-CHROME_EXTENSION_ID = 'omfbdeblphficlecofpbkdcchnghnkhc'
+CHROME_EXTENSION_ID = 'dlbaedkcgjohebkgillljbggndicfoej'
 
 
 def get_target_dirs(home_dir, browser):
