@@ -56,7 +56,7 @@ def start_flash_process(message, development):
 
     if not verified:
         # maybe unauthorized access via extension, so ignore
-        logging.debug('unauthorized access denied')
+        logging.warning('unauthorized access denied')
         return
 
     # unwrap message from website
@@ -94,8 +94,6 @@ def start_flash_process(message, development):
         inner_command = './flash {0} {1} {2} && touch {3}'.format(board, path_to_makefile, int(development),
                                                               file_to_look_at.replace(' ', '\ '))
 
-        logging.debug(inner_command)
-
         Popen(['x-terminal-emulator', '-e', 'bash -c "{}"'.format(inner_command)])
 
         while not os.path.exists(file_to_look_at):
@@ -112,13 +110,8 @@ def main(calling_extension):
 
     development = False
 
-    logging.debug(CHROME_EXTENSION_ID_DEVELOPMENT)
-    logging.debug(calling_extension)
-
     if CHROME_EXTENSION_ID_DEVELOPMENT in calling_extension:
         development = True
-
-    logging.debug(development)
 
     action_dict = {
         'rapstore_test_connection_native_messaging_host': test_connection_native_messaging_host,
