@@ -28,6 +28,9 @@ class Browser(object):
     def get_user_install_path(self, home_dir, isMacOS):
         return None
 
+    def get_extension_file_web(self):
+        return None
+
 
 class Firefox(Browser):
 
@@ -54,6 +57,9 @@ class Firefox(Browser):
         else:
             return ['%s/.mozilla/native-messaging-hosts' % home_dir]
 
+    def get_extension_file_web(self):
+        pass
+
 
 class Chrome(Browser):
 
@@ -78,6 +84,9 @@ class Chrome(Browser):
         else:
             return ['%s/.config/google-chrome/NativeMessagingHosts' % home_dir]
 
+    def get_extension_file_web(self):
+        pass
+
 
 class Chromium(Browser):
 
@@ -101,6 +110,9 @@ class Chromium(Browser):
 
         else:
             return ['%s/.config/chromium/NativeMessagingHosts' % home_dir]
+
+    def get_extension_file_web(self):
+        pass
 
 
 class BrowserNotSupportedException(Exception):
