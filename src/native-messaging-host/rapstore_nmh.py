@@ -24,24 +24,29 @@ from Crypto.Signature import PKCS1_v1_5
 from base64 import b64decode
 from shutil import rmtree
 from subprocess import Popen
+import sys
 
 from util import io
-
 import config
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 LOGFILE = os.path.join(CUR_DIR, 'log', 'rapstore_nmh_log.txt')
 PUBLIC_KEY_FILE = os.path.join(CUR_DIR, 'website.pub')
 
+FIREFOX_EXTENSION_ID = 'rapstore.browser-integration@riot-apps.net'
 
-def test_connection_native_messaging_host(message):
+CHROME_EXTENSION_ID = 'dlbaedkcgjohebkgillljbggndicfoej'
+CHROME_EXTENSION_ID_DEVELOPMENT = 'omfbdeblphficlecofpbkdcchnghnkhc'
+
+
+def test_connection_native_messaging_host(message, development):
 
     # print repsonse for callback within background script
     response = {'success': True}
     io.write_message_to_stdout(response)
 
 
-def start_flash_process(message):
+def start_flash_process(message, development):
 
     # unwrap message from extension
     message_from_website = message['message']
@@ -86,10 +91,11 @@ def start_flash_process(message):
         # open standard terminal and execute shell script 'flash'
         file_to_look_at = os.path.join(CUR_DIR, '.terminal_finished_for_' + application_name)
 
-        logging.debug(file_to_look_at)
-
-        inner_command = './flash {0} {1} && touch {2}'.format(board, path_to_makefile,
+        inner_command = './flash {0} {1} {2} && touch {3}'.format(board, path_to_makefile, int(development),
                                                               file_to_look_at.replace(' ', '\ '))
+
+        logging.debug(inner_command)
+
         Popen(['x-terminal-emulator', '-e', 'bash -c "{}"'.format(inner_command)])
 
         while not os.path.exists(file_to_look_at):
@@ -102,7 +108,17 @@ def start_flash_process(message):
         logging.error(str(e), exc_info=True)
 
 
-def main():
+def main(calling_extension):
+
+    development = False
+
+    logging.debug(CHROME_EXTENSION_ID_DEVELOPMENT)
+    logging.debug(calling_extension)
+
+    if CHROME_EXTENSION_ID_DEVELOPMENT in calling_extension:
+        development = True
+
+    logging.debug(development)
 
     action_dict = {
         'rapstore_test_connection_native_messaging_host': test_connection_native_messaging_host,
@@ -119,7 +135,7 @@ def main():
         logging.error('missing field "action"')
 
     else:
-        function_for_action(message_from_extension)
+        function_for_action(message_from_extension, development)
 
 
 def verify_message(public_key, message, signature):
@@ -162,7 +178,10 @@ if __name__ == '__main__':
     logging.basicConfig(filename=LOGFILE, format=config.LOGGING_FORMAT, datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
     try:
-        main()
+        # firefox calls nmh with 3 arguments, chrome only with 2. identify the last argument as calling extension id
+        calling_extension_id = sys.argv[-1]
+
+        main(calling_extension_id)
 
     except Exception as e:
         logging.error(str(e), exc_info=True)

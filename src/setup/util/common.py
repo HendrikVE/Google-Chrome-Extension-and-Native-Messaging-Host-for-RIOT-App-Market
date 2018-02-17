@@ -20,7 +20,9 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 from .browser import BrowserNotSupportedException
 
 FIREFOX_EXTENSION_ID = 'rapstore.browser-integration@riot-apps.net'
+
 CHROME_EXTENSION_ID = 'dlbaedkcgjohebkgillljbggndicfoej'
+CHROME_EXTENSION_ID_DEVELOPMENT = 'omfbdeblphficlecofpbkdcchnghnkhc'
 
 
 def get_target_dirs(home_dir, browser):
@@ -64,7 +66,7 @@ def get_target_dirs(home_dir, browser):
 def get_allowed_attribute(browser):
 
     if browser.get_name() == 'chrome' or browser.get_name() == 'chromium':
-        return '"allowed_origins": [ "chrome-extension://%s/" ]' % CHROME_EXTENSION_ID
+        return '"allowed_origins": [ "chrome-extension://{0}/", "chrome-extension://{1}/" ]'.format(CHROME_EXTENSION_ID, CHROME_EXTENSION_ID_DEVELOPMENT)
 
     elif browser.get_name() == 'firefox':
         return '"allowed_extensions": [ "%s" ]' % FIREFOX_EXTENSION_ID

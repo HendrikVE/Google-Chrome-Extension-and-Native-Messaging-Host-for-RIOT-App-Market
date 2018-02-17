@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2017 Hendrik van Essen and FU Berlin
+# Copyright (C) 2018 Hendrik van Essen and FU Berlin
 #
 # This file is subject to the terms and conditions of the GNU Lesser
 # General Public License v2.1. See the file LICENSE in the top level
@@ -17,7 +17,24 @@ function flash {
     make -C "$2" "BOARD=$1" flash
 }
 
-flash "$1" "$2"
+# check if development mode
+if [ $3 -eq 1 ]
+then
+    read -p "The flash process was requested by an extension with a development id, so the extension was not signed. Do you want to continue [Y/n]? " -r choice
+    # default is yes
+    choice=${choice:-y}
+
+    if [[ $choice =~ ^[Yy]$ ]]
+    then
+        flash "$1" "$2"
+
+    else
+        exit 0
+    fi
+
+else
+    flash "$1" "$2"
+fi
 
 echo 
 echo "Finished script. Press a key to close this terminal..."
