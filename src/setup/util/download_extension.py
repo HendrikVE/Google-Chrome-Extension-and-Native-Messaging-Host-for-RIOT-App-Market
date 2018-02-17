@@ -21,14 +21,16 @@ CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def download_extension(browser, save_path, extension_version):
 
-    url = _get_server_url(browser, extension_version)
+    github_version_tag = _get_github_version_tag()
+    print('current release: ' + github_version_tag)
+
+    url = _get_server_url(browser, github_version_tag, extension_version)
+    print('downloading extension from ' + url)
 
     check_output(['curl', '-L', url, '--create-dirs', '-o', save_path])
 
 
-def _get_server_url(browser, extension_version):
-
-    github_version_tag = _get_github_version_tag()
+def _get_server_url(browser, github_version_tag, extension_version):
 
     if isinstance(browser, Chrome) or isinstance(browser, Chromium):
         return 'https://github.com/riot-appstore/rapstore-browser-integration/releases/download/{0}/extension-{1}.crx'.format(github_version_tag, extension_version)
