@@ -6,7 +6,7 @@
         }
     },
     "name": "RAPstore Extension",
-    "version": "1.0.8",
+    "version": "1.1.0",
     "manifest_version": 2,
     "description": "Browser integration for the RAPstore",
 
@@ -21,9 +21,10 @@
     "content_scripts": [{
         "matches": [
             "*://localhost/*",
-            "*://141.22.28.91/*",
-            "*://rapstore.cladmi.eu/*",
-            "*://demo.riot-apps.net/*"
+
+            "*://demo.riot-apps.net/*",
+            "*://dev.riot-apps.net/*",
+            "*://staging.riot-apps.net/*"
         ],
         "js": ["content_script.js"],
         "all_frames": true,
