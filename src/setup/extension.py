@@ -15,6 +15,8 @@ import json
 import os
 import subprocess
 
+from .util.colored_print import print_red
+
 from .util.browser import Firefox, Chrome, Chromium, BrowserNotSupportedException
 from .util.common import CHROME_EXTENSION_ID, is_root_user
 from .util.download_extension import download_extension
@@ -54,7 +56,7 @@ def install_extension(browser, version):
         _install_chrome_based(INSTALL_PATH_CHROME, extension_crx_path, version)
 
         print('installed extension for chrome')
-        print('NOTICE: You need to restart your browser!')
+        print_red('NOTICE: You need to restart your browser!')
 
     elif isinstance(browser, Chromium):
 
@@ -62,7 +64,7 @@ def install_extension(browser, version):
         _install_chrome_based(INSTALL_PATH_CHROMIUM, extension_crx_path, version)
 
         print('installed extension for chromium')
-        print('NOTICE: You need to restart your browser!')
+        print_red('NOTICE: You need to restart your browser!')
 
     else:
         raise BrowserNotSupportedException(browser.get_name())
@@ -74,7 +76,7 @@ def uninstall_extension(browser):
 
     if isinstance(browser, Firefox):
 
-        print('NOTICE: please remove the extension manually')
+        print_red('NOTICE: please remove the extension manually')
 
     elif isinstance(browser, Chrome):
 
@@ -91,7 +93,7 @@ def uninstall_extension(browser):
             print(output)
 
         print('removed extension from chrome')
-        print('NOTICE: You need to restart your browser!')
+        print_red('NOTICE: You need to restart your browser!')
 
     elif isinstance(browser, Chromium):
 
@@ -108,7 +110,7 @@ def uninstall_extension(browser):
             print(output)
 
         print('removed extension from chromium')
-        print('NOTICE: You need to restart your browser!')
+        print_red('NOTICE: You need to restart your browser!')
 
     else:
         raise BrowserNotSupportedException(browser.get_name())
